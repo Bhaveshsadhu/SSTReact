@@ -10,7 +10,8 @@ const FacultiesPage = () => {
   const [totalPages, setTotalPages] = useState(0);
   const [allCardsData, setAllCardsData] = useState([]);
   const { id } = useParams();
-  const Img = "assets/img/courses.jpg";
+  // const Img = "assets/img/courses.jpg";
+  const Img = "/assets/img/courses.jpg";
 
   useEffect(() => {
     fetchData();
@@ -20,14 +21,8 @@ const FacultiesPage = () => {
     // console.log("this is facultiesPage");
     fetchDataFromAPI(API_BASE_URL + "/facultyCategory/" + id + "/courses")
       .then((response) => {
-        console.log(response);
-        if (response && Array.isArray(response)) {
-          // const filteredCourses = response.filter(
-          //   (course) => course.faculty_id === id
-          // );
-
-          setAllCardsData(response);
-
+        if (response && Array.isArray(response.data)) {
+          setAllCardsData(response.data);
           setTotalPages(Math.ceil(response.length / cardsPerPage));
         } else {
           console.error("Data is empty or not in expected format.");

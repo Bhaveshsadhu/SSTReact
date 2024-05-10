@@ -31,6 +31,7 @@ import CourseRegistrationForm from "./Pages/CourseRegistrationForm";
 import LogoutPage from "./Pages/LogoutPage";
 import Demo from "./Pages/Demo";
 import NotFoundPage from "./Pages/NotFoundPage";
+import ApplyNowPage from "./Pages/ApplyNowPage";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -102,7 +103,7 @@ function App() {
           <Route path="/Demo" component={Demo} />
           <Route
             path="/courses/:id/"
-            render={(props) => <CourseDetailsPage />}
+            render={(props) => <CourseDetailsPage isLoggedIn={isLoggedIn} />}
           />
           <Route
             path="/facultyCategory/:id/courses"
@@ -110,6 +111,7 @@ function App() {
           />
           <Route path="/registration-form" component={CourseRegistrationForm} />
           <Route path="/search/:searchTerm" component={SearchResults} />
+          <Route path="/ApplyNow" component={ApplyNowPage} />
           <Route component={NotFoundPage} />
         </Switch>
         <Footer />

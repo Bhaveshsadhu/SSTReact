@@ -48,12 +48,12 @@ const MostPopularCourses = ({ cachedData }) => {
       setTotalPages(Math.ceil(cachedData.popularCourses.length / cardsPerRow));
       setLoading(false);
       // Print message indicating data is from cache
-      console.log("This is calling from MOST_POPULAR_COURSES : Cached Data");
+      // console.log("This is calling from MOST_POPULAR_COURSES : Cached Data");
     } else {
       // Data is not cached, fetch it from API
       fetchDataFromAPI(LANDING_PAGE_URL, "GET")
         .then((data) => {
-          console.log("This is calling from MOST_POPULAR_COURSES : API Data");
+          // console.log("This is calling from MOST_POPULAR_COURSES : API Data");
           if (data && Array.isArray(data.popularCourses)) {
             // Cache the fetched data
             // cachedData[LANDING_PAGE_URL] = data;
@@ -62,7 +62,7 @@ const MostPopularCourses = ({ cachedData }) => {
             setTotalPages(Math.ceil(data.popularCourses.length / cardsPerRow));
             setLoading(false);
             // Print message indicating data is from API
-            console.log("MOST_POPULAR_COURSES_Data is coming from API");
+            // console.log("MOST_POPULAR_COURSES_Data is coming from API");
           }
         })
         .catch((error) => {
@@ -71,16 +71,6 @@ const MostPopularCourses = ({ cachedData }) => {
         });
     }
   };
-
-  // const renderLoader = () => {
-  //   return (
-  //     <div className="d-flex justify-content-center mt-5">
-  //       <div className="spinner-border text-primary" role="status">
-  //         <span className="visually-hidden">Loading...</span>
-  //       </div>
-  //     </div>
-  //   );
-  // };
 
   const renderCards = () => {
     if (loading) {

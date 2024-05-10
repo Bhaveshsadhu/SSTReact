@@ -12,6 +12,9 @@ const loginURL = API_BASE_URL + "/login";
 const logoutURL = API_BASE_URL + "/logout";
 const StudentProfileURL = API_BASE_URL + "/student/profile";
 const StudentApplicationsURL = API_BASE_URL + "/student/applications";
+const SessionDropdownURL = API_BASE_URL + "/ajax/sessions?courseId=";
+const branchDropdownURL = API_BASE_URL + "/ajax/branches?sessionId=";
+const ScholarshipsURL = API_BASE_URL + "/ajax/scholarships?courseId=";
 
 const DEBUG_MODE = false;
 const FEATURE_FLAG_ENABLED = true;
@@ -59,4 +62,7 @@ export {
   StudentProfileURL,
   StudentApplicationsURL,
   logoutURL,
+  SessionDropdownURL,
+  branchDropdownURL,
+  ScholarshipsURL,
 };

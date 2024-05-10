@@ -7,8 +7,8 @@ export const useCache = () => useContext(CacheContext);
 
 export const CacheProvider = ({ children }) => {
   const CACHE_KEY = "cachedData";
-  const CACHE_EXPIRATION_TIME = 30 * 60 * 1000; // 30 minutes in milliseconds
-  // const CACHE_EXPIRATION_TIME = 5 * 1000; // 5 seconds in milliseconds
+  // const CACHE_EXPIRATION_TIME = 30 * 60 * 1000; // 30 minutes in milliseconds
+  const CACHE_EXPIRATION_TIME = 5 * 1000; // 5 seconds in milliseconds
 
   const setCachedData = (data) => {
     const cachedData = {

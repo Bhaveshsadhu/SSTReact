@@ -62,7 +62,7 @@ const MostAppliedFaculties = ({ cachedData }) => {
       );
       setLoading(false);
       // Print message indicating data is from cache
-      console.log("This is calling from MOSTAPPLIEDFACULTY_Data : Cached Data");
+      // console.log("This is calling from MOSTAPPLIEDFACULTY_Data : Cached Data");
     } else {
       // Data is not cached, fetch it from API
       fetchDataFromAPI(LANDING_PAGE_URL, "GET")
@@ -77,9 +77,9 @@ const MostAppliedFaculties = ({ cachedData }) => {
             );
             setLoading(false);
             // Print message indicating data is from API
-            console.log(
-              "This is calling from MOSTAPPLIEDFACULTY_Data : API Data"
-            );
+            // console.log(
+            //   "This is calling from MOSTAPPLIEDFACULTY_Data : API Data"
+            // );
           }
         })
         .catch((error) => {

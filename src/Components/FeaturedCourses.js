@@ -51,7 +51,7 @@ const FeaturedCourses = ({ cachedData }) => {
       setTotalPages(Math.ceil(cachedData.featuredCourses.length / cardsPerRow));
       setLoading(false);
       // Print message indicating data is from cache
-      console.log("This is calling from FEATUREDCOURSES_Data : Cached Data");
+      // console.log("This is calling from FEATUREDCOURSES_Data : Cached Data");
     } else {
       // Data is not cached, fetch it from API
       fetchDataFromAPI(LANDING_PAGE_URL, "GET")
@@ -63,7 +63,7 @@ const FeaturedCourses = ({ cachedData }) => {
             setTotalPages(Math.ceil(data.featuredCourses.length / cardsPerRow));
             setLoading(false);
             // Print message indicating data is from API
-            console.log("This is calling from FEATUREDCOURSES_Data : API Data");
+            // console.log("This is calling from FEATUREDCOURSES_Data : API Data");
           }
         })
         .catch((error) => {
