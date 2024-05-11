@@ -1,6 +1,77 @@
-import React from "react";
-
+import React, { useState, useEffect } from "react";
+import { useHistory, useLocation } from "react-router-dom";
+import { updateStudentURL } from "../settings";
+import { ApiCall } from "../Components/ApiCall";
+// import { useHistory } from "react-router-dom";
 function UserProfileEdit() {
+  const location = useLocation();
+  const { StudentData } = location.state;
+  const [studentData, setStudentData] = useState({
+    firstName: StudentData.firstName || "",
+    lastName: StudentData.lastName || "",
+    phoneNumber: StudentData.phoneNumber || "",
+    mobileNumber: StudentData.mobileNumber || "",
+    email: StudentData.email || "",
+    password: StudentData.newPassword,
+  });
+  const history = useHistory();
+  // useEffect(() => {
+  //   console.log("student data : " + JSON.stringify(StudentData));
+  // });
+  const handleUpdateProfile = async () => {
+    try {
+      // console.log("url : " + updateStudentURL + StudentData.id);
+      // console.log("from data : " + JSON.stringify(studentData));
+      if (studentData.newPassword !== studentData.confirmPassword) {
+        window.alert("New password and confirm password Must match.");
+        // You can display an error message to the user or handle it as needed
+        return;
+      }
+      // return;
+      const response = await ApiCall(updateStudentURL + StudentData.id, "PUT", {
+        body: studentData,
+      });
+
+      if (response.ok) {
+        console.log("Profile updated successfully!");
+        // Redirect to the profile page or any other page as needed
+        history.push("/StudentProfile");
+      } else {
+        const data = await response.json();
+        console.error("Failed to update profile:", data.message);
+        // Handle error response
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error.message);
+      // Handle fetch error
+    }
+  };
+  const handleDeleteProfile = async () => {
+    try {
+      const response = await ApiCall(
+        updateStudentURL + StudentData.id,
+        "DELETE"
+      );
+
+      if (response.ok) {
+        console.log("Profile deleted successfully!");
+        history.push("/");
+      } else {
+        const data = await response.json();
+        console.error("Failed to delete profile:", data.message);
+      }
+    } catch (error) {
+      console.error("Error deleting profile:", error.message);
+    }
+  };
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setStudentData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
   function displaySelectedImage(event, targetId) {
     // Handle image display logic here if needed
     var selectedImage = document.getElementById(targetId);
@@ -52,6 +123,9 @@ function UserProfileEdit() {
                         placeholder=""
                         aria-label="First name"
                         id="firstName"
+                        name="firstName"
+                        value={studentData.firstName}
+                        onChange={handleChange}
                       />
                     </div>
                     {/* Last name */}
@@ -63,6 +137,9 @@ function UserProfileEdit() {
                         placeholder=""
                         aria-label="Last name"
                         id="lastName"
+                        name="lastName"
+                        value={studentData.lastName}
+                        onChange={handleChange}
                       />
                     </div>
                     {/* Phone number */}
@@ -74,10 +151,13 @@ function UserProfileEdit() {
                         placeholder=""
                         aria-label="Phone number"
                         id="phoneNumber"
+                        name="phoneNumber"
+                        value={studentData.phone}
+                        onChange={handleChange}
                       />
                     </div>
                     {/* Mobile number */}
-                    <div className="col-md-6">
+                    {/* <div className="col-md-6">
                       <label className="form-label">Mobile number *</label>
                       <input
                         type="text"
@@ -86,13 +166,20 @@ function UserProfileEdit() {
                         aria-label="Phone number"
                         id="mobileNumber"
                       />
-                    </div>
+                    </div> */}
                     {/* Email */}
                     <div className="col-md-6">
                       <label htmlFor="inputEmail4" className="form-label">
                         Email *
                       </label>
-                      <input type="email" className="form-control" id="email" />
+                      <input
+                        type="email"
+                        className="form-control"
+                        id="email"
+                        name="email"
+                        value={studentData.email}
+                        onChange={handleChange}
+                      />
                     </div>
                     {/* Skype */}
                     <div className="col-md-6">
@@ -262,7 +349,10 @@ function UserProfileEdit() {
                       <input
                         type="password"
                         className="form-control"
-                        id="exampleInputPassword1"
+                        id="oldPassword"
+                        name="oldPassword"
+                        value={studentData.oldPassword}
+                        onChange={handleChange}
                       />
                     </div>
                     {/* New password */}
@@ -276,7 +366,10 @@ function UserProfileEdit() {
                       <input
                         type="password"
                         className="form-control"
-                        id="exampleInputPassword2"
+                        id="newPassword"
+                        name="newPassword"
+                        value={studentData.newPassword}
+                        onChange={handleChange}
                       />
                     </div>
                     {/* Confirm password */}
@@ -290,7 +383,10 @@ function UserProfileEdit() {
                       <input
                         type="password"
                         className="form-control"
-                        id="exampleInputPassword3"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        value={studentData.confirmPassword}
+                        onChange={handleChange}
                       />
                     </div>
                   </div>
@@ -300,10 +396,18 @@ function UserProfileEdit() {
             {/* Row END */}
             {/* button */}
             <div className="gap-3 d-md-flex justify-content-md-end text-center">
-              <button type="button" className="btn btn-danger btn-lg">
+              <button
+                type="button"
+                className="btn btn-danger btn-lg"
+                onClick={handleDeleteProfile}
+              >
                 Delete profile
               </button>
-              <button type="button" className="btn btn-primary btn-lg">
+              <button
+                type="button"
+                className="btn btn-primary btn-lg"
+                onClick={handleUpdateProfile}
+              >
                 Update profile
               </button>
             </div>

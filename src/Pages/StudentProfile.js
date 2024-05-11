@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { StudentProfileURL, StudentApplicationsURL } from "../settings";
+import { useHistory, useParams } from "react-router-dom";
 import { ApiCall } from "../Components/ApiCall";
 
 const StudentProfile = () => {
   const [studentData, setStudentData] = useState(null);
   const [application, setApplication] = useState(null);
+  const history = useHistory();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const data = await ApiCall(StudentProfileURL);
         const studentId = data.id;
-
+        // console.log("Student Data : " + JSON.stringify(data));
         const applicationdata = await ApiCall(
           StudentApplicationsURL + "?id=" + studentId
         );
-        console.log("Application Data : " + applicationdata);
+        // console.log("Application Data : " + applicationdata);
         setStudentData(data);
 
         setApplication(applicationdata);
@@ -28,6 +30,12 @@ const StudentProfile = () => {
 
     fetchData();
   }, []);
+  const handleApplyNowClick = () => {
+    history.push({
+      pathname: "/StudentProfileEdit",
+      state: { StudentData: studentData },
+    });
+  };
 
   return (
     <div className="container">
@@ -101,22 +109,32 @@ const StudentProfile = () => {
                     <hr />
                     <div className="row">
                       <div className="col-sm-3">
-                        <h6 className="mb-0">Address</h6>
+                        <h6 className="mb-0">Country</h6>
                       </div>
                       <div className="col-sm-9 text-secondary">
-                        {studentData.address}
+                        {studentData.country.countryName}
+                        <i
+                          className={studentData.country.iconClass}
+                          aria-hidden="true"
+                        ></i>
                       </div>
                     </div>
                     <hr />
                     <div className="row">
                       <div className="col-sm-12">
-                        <a
+                        {/* <a
                           className="btn btn-info "
                           target=""
-                          href="UserProfileEdit"
+                          href="StudentProfileEdit"
                         >
                           Edit
-                        </a>
+                        </a> */}
+                        <button
+                          onClick={handleApplyNowClick}
+                          className="btn btn-info"
+                        >
+                          Edit
+                        </button>
                       </div>
                     </div>
                   </div>

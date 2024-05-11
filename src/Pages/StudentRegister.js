@@ -1,19 +1,20 @@
 import React, { useState } from "react";
 import { Link, useHistory } from "react-router-dom"; // Import useHistory hook
 import { StudentRegisterURL } from "../settings";
+import { ApiCall } from "../Components/ApiCall";
 
 function StudentRegister() {
   const [formData, setFormData] = useState({
-    studentEmail: "",
-    studentPassword: "",
-    studentFirstName: "",
-    studentLastName: "",
-    studentPhone: "1234567890",
-    studentAddress: "1234 Street Name",
-    studentCity: "City",
-    studentCountry: "Country",
-    studentBirthDate: "2000-01-01",
-    studentGender: "Male",
+    email: "",
+    password: "",
+    first_name: "",
+    last_name: "",
+    phone: "1234567890",
+    address: "1234 Street Name",
+    city: "City",
+    country_id: 2,
+    birth_date: "2000-01-01",
+    gender: "Male",
   });
 
   const history = useHistory(); // Initialize useHistory
@@ -29,28 +30,36 @@ function StudentRegister() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const headers = new Headers();
-    headers.append("Content-Type", "application/json");
-    headers.append(
-      "Public-Token",
-      "743c7a15a3850459adb8c1b9e3bfc744ed3efe26c9d3d808fdf30c9c2fd5c09d"
-    );
+    // const headers = new Headers();
+    // headers.append("Content-Type", "application/json");
+    // headers.append(
+    //   "Public-Token",
+    //   "743c7a15a3850459adb8c1b9e3bfc744ed3efe26c9d3d808fdf30c9c2fd5c09d"
+    // );
 
+    // try {
+    //   const response = await fetch(StudentRegisterURL, {
+    //     method: "POST",
+    //     headers: headers,
+    //     credentials: "include",
+    //     body: JSON.stringify(formData), // Use formData here
+    //   });
     try {
-      const response = await fetch(StudentRegisterURL, {
-        method: "POST",
-        headers: headers,
-        credentials: "include",
-        body: JSON.stringify(formData), // Use formData here
+      console.log("Form data : " + JSON.stringify(formData));
+
+      const response = await ApiCall(StudentRegisterURL, "POST", {
+        body: { formData },
       });
+
+      console.log("response data : " + response);
 
       if (response.ok) {
         // Successful Registration
         console.log("Registration successful!");
 
-        const data = await response.json();
-        const tokenId = data.token;
-        localStorage.setItem("token", tokenId);
+        // const data = await response.json();
+        // const tokenId = data.token;
+        // localStorage.setItem("token", tokenId);
 
         history.push("/LoginPage"); // Redirect after successful registration
       } else {
@@ -71,18 +80,15 @@ function StudentRegister() {
       <div className="row">
         <form className="col-md-6" onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label
-              className="form-label fw-semibold"
-              htmlFor="studentFirstName"
-            >
+            <label className="form-label fw-semibold" htmlFor="first_name">
               First Name
             </label>
             <input
               className="form-control rounded-pill"
-              id="studentFirstName"
+              id="first_name"
               type="text"
-              name="studentFirstName"
-              value={formData.studentFirstName}
+              name="first_name"
+              value={formData.first_name}
               onChange={handleChange}
               required
               autoFocus
@@ -90,45 +96,45 @@ function StudentRegister() {
           </div>
 
           <div className="mb-4">
-            <label className="form-label fw-semibold" htmlFor="studentLastName">
+            <label className="form-label fw-semibold" htmlFor="last_name">
               Last Name
             </label>
             <input
               className="form-control rounded-pill"
-              id="studentLastName"
+              id="last_name"
               type="text"
-              name="studentLastName"
-              value={formData.studentLastName}
+              name="last_name"
+              value={formData.last_name}
               onChange={handleChange}
               required
             />
           </div>
 
           <div className="mb-4">
-            <label className="form-label fw-semibold" htmlFor="studentEmail">
+            <label className="form-label fw-semibold" htmlFor="email">
               Email
             </label>
             <input
               className="form-control rounded-pill"
-              id="studentEmail"
+              id="email"
               type="email"
-              name="studentEmail"
-              value={formData.studentEmail}
+              name="email"
+              value={formData.email}
               onChange={handleChange}
               required
             />
           </div>
 
           <div className="mb-4">
-            <label className="form-label fw-semibold" htmlFor="studentPassword">
+            <label className="form-label fw-semibold" htmlFor="password">
               Password
             </label>
             <input
               className="form-control rounded-pill"
-              id="studentPassword"
+              id="password"
               type="password"
-              name="studentPassword"
-              value={formData.studentPassword}
+              name="password"
+              value={formData.password}
               onChange={handleChange}
               required
               autoComplete="new-password"

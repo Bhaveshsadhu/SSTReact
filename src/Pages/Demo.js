@@ -1,58 +1,188 @@
-import React, { useState, useEffect } from "react";
-import { SessionDropdownURL } from "../settings";
-import { ApiCall } from "../Components/ApiCall";
+// import React from "react";
+// import NewRibbon from "./NewRibbon";
+// import FeaturedRibbon from "./FeaturedRibbon"; // Ensure you have the correct path to FeaturedRibbon component
 
-function SessionDropdown({ courseId }) {
-  const [sessions, setSessions] = useState([]);
-  const [selectedSession, setSelectedSession] = useState("");
+// const Card = ({ card, Img }) => {
+//   return (
+//     <div className="card h-100 hover-card">
+//       <NewRibbon createdAt={card.created_at} />
+//       <FeaturedRibbon isFeatured={card.isFeatured} />
+//       <img src={Img} className="card-img-top" alt="..." />
+//       <div className="card-body d-flex flex-column">
+//         <h5 className="card-title fw-bold" title={card.courseName}>
+//           {!card.courseName ||
+//           card.courseName === "" ||
+//           card.courseName === undefined
+//             ? card.name
+//             : card.courseName}
+//         </h5>
+//         {/* for faculty  */}
 
-  useEffect(() => {
-    const fetchSessions = async () => {
-      try {
-        const response = await ApiCall(SessionDropdownURL + "1");
-        console.log("response : " + response);
-        setSessions(response);
-      } catch (error) {
-        console.error("Error fetching sessions:", error);
-      }
-    };
+//         {card.faculty_category && (
+//           <h5 className="card-title fw-bold mb-1">
+//             {card.faculty_category.facultyName &&
+//             typeof card.faculty_category.facultyName === "string" &&
+//             card.faculty_category.facultyName.length > 20
+//               ? `${card.faculty_category.facultyName.substring(0, 30)}`
+//               : card.faculty_category.facultyName}
+//           </h5>
+//         )}
 
-    fetchSessions();
-  }, [courseId]);
+//         {/* {card.faculty_category && card.faculty_category.description && (
+//           <p className="card-text flex-grow-1" style={{ fontSize: "0.875rem" }}>
+//             {card.faculty_category.description.length > 100
+//               ? `${card.faculty_category.description.substring(0, 100)}...`
+//               : card.faculty_category.description}
+//           </p>
+//         )} */}
 
-  const handleSessionChange = (event) => {
-    setSelectedSession(event.target.value);
-  };
+//         {/* <p className="card-text mt-auto">
+//           {card.description &&
+//           card.description !== null &&
+//           card.description.length > 100
+//             ? `${card.description.substring(0, 70)}...`
+//             : card.description}
+//         </p> */}
+//         {/* <p className="card-text mt-auto">
+//           {card.description &&
+//           card.description !== null &&
+//           card.description.length > 100
+//             ? `${card.description.substring(0, 70)}...`
+//             : card.description}
+//         </p> */}
+//         <p className="card-text mt-auto">
+//           {card.description &&
+//           card.description !== null &&
+//           card.description.length > 100
+//             ? `${card.description.substring(0, 70)}...`
+//             : card.description}
+//         </p>
+//         {/* <p className="pb-3">{card.level}</p> */}
+//         {/* <hr className="mt-auto" /> */}
+//         {card.faculty && (
+//           <>
+//             <hr />
+//             <div className="align-items-end">
+//               <table className="table table-borderless">
+//                 <tbody>
+//                   {(card.faculty.faculty_category || card.faculty.name) && (
+//                     <tr>
+//                       <th scope="row" className="px-0 pb-1">
+//                         <i className="fa fa-laptop-code fa-lg"></i>
+//                       </th>
 
-  return (
-    <div className="dropdown">
-      <button
-        className="btn btn-info dropdown-toggle"
-        type="button"
-        id="sessionDropdown"
-        data-bs-toggle="dropdown"
-        aria-expanded="false"
-      >
-        {selectedSession
-          ? sessions.find((session) => session.id === selectedSession)?.name
-          : "Select Session"}
-      </button>
-      <ul className="dropdown-menu" aria-labelledby="sessionDropdown">
-        {sessions &&
-          sessions.map((session) => (
-            <li key={session.id}>
-              <button
-                className="dropdown-item"
-                type="button"
-                onClick={() => setSelectedSession(session.id)}
-              >
-                {session.name}
-              </button>
-            </li>
-          ))}
-      </ul>
-    </div>
-  );
-}
+//                       {/* <th scope="row" className="px-0 pb-1">
+//                       <i className="fa fa-laptop-code fa-lg "></i>
+//                     </th> */}
 
-export default SessionDropdown;
+//                       <td className="pb-3 ">
+//                         {card.faculty &&
+//                           card.faculty.faculty_category &&
+//                           card.faculty.faculty_category.facultyName}
+//                         {card.faculty && card.faculty.name && card.faculty.name}
+//                       </td>
+//                     </tr>
+//                   )}
+//                   <tr>
+//                     <th scope="row" className="px-0  pt-2">
+//                       <i className="fa fa-graduation-cap fa-lg "></i>
+//                     </th>
+//                     <td className="pb-3">
+//                       {card.courseLevel}
+//                       {card.level}
+//                     </td>
+//                   </tr>
+//                 </tbody>
+//               </table>
+//               <hr />
+//               <div className="d-flex justify-content-between pt-2 text-center text-uppercase living-coral-text">
+//                 <div>
+//                   {card.courseDelivery &&
+//                     (() => {
+//                       const courseDeliveryUpperCase =
+//                         card.courseDelivery.toUpperCase();
+//                       let iconClassName = "";
+//                       let deliveryMethod = "";
+
+//                       if (courseDeliveryUpperCase === "ON-CAMPUS") {
+//                         iconClassName = "fa fa-users fa-lg ";
+//                         deliveryMethod = "ON-CAMPUS";
+//                       } else if (courseDeliveryUpperCase === "HYBRID") {
+//                         iconClassName = "fa fa-exchange fa-lg ";
+//                         deliveryMethod = "Hybrid";
+//                       } else if (courseDeliveryUpperCase === "ONLINE") {
+//                         iconClassName = "fa fa-desktop fa-lg ";
+//                         deliveryMethod = "Online";
+//                       }
+
+//                       return (
+//                         <div>
+//                           <i className={iconClassName}></i>
+//                           <p className="mb-0">{deliveryMethod}</p>
+//                         </div>
+//                       );
+//                     })()}
+//                   {card.delivery &&
+//                     (() => {
+//                       const courseDeliveryUpperCase =
+//                         card.delivery.toUpperCase();
+//                       let iconClassName = "";
+//                       let deliveryMethod = "";
+
+//                       if (courseDeliveryUpperCase === "ON-CAMPUS") {
+//                         iconClassName = "fa fa-users fa-lg ";
+//                         deliveryMethod = "ON-CAMPUS";
+//                       } else if (courseDeliveryUpperCase === "HYBRID") {
+//                         iconClassName = "fa fa-exchange fa-lg ";
+//                         deliveryMethod = "Hybrid";
+//                       } else if (courseDeliveryUpperCase === "ONLINE") {
+//                         iconClassName = "fa fa-desktop fa-lg ";
+//                         deliveryMethod = "Online";
+//                       }
+
+//                       return (
+//                         <div>
+//                           <i className={iconClassName}></i>
+//                           <p className="mb-0">{deliveryMethod}</p>
+//                         </div>
+//                       );
+//                     })()}
+//                 </div>
+//                 <div>
+//                   {(card.duration.durationName || card.duration.name) && (
+//                     <>
+//                       <i className="fas fa-clock-cap fa-lg"></i>
+//                       <p className="">
+//                         {card.duration.durationName}
+//                         {card.duration.name}
+//                       </p>
+//                     </>
+//                   )}
+//                 </div>
+//                 <div>
+//                   {(card.duration.type || card.type) && (
+//                     <>
+//                       <i className="fas fa-calendar fa-lg"></i>
+//                       <p className="">
+//                         {card.duration.type}
+//                         {card.type}
+//                       </p>
+//                     </>
+//                   )}
+//                 </div>
+//               </div>
+//             </div>
+//           </>
+//         )}
+//         <a
+//           href={`/courses/${card.id}`}
+//           className="btn btn-primary mt-auto align-self-center"
+//         >
+//           Read More
+//         </a>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default Card;

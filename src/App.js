@@ -12,9 +12,9 @@ import GuestNavbar from "./Components/GuestNavbar";
 import HomePage from "./Pages/HomePage";
 import AboutPage from "./Pages/AboutPage";
 import StudentProfile from "./Pages/StudentProfile";
-import StudentApplication1 from "./Pages/StudentApplication1";
+import StudentApplication from "./Pages/StudentApplication";
 import AllApplication from "./Pages/AllApplication";
-import UserProfileEdit from "./Pages/UserProfileEdit";
+import StudentProfileEdit from "./Pages/StudentProfileEdit";
 import StudentRegister from "./Pages/StudentRegister";
 import LoginPage from "./Pages/LoginPage";
 import ContactPage from "./Pages/ContactPage";
@@ -80,9 +80,9 @@ function App() {
           <Route path="/allApplication" component={AllApplication} />
           <Route
             path="/StudentApplication/:id?"
-            component={StudentApplication1}
+            component={StudentApplication}
           />
-          <Route path="/UserProfileEdit" component={UserProfileEdit} />
+          <Route path="/StudentProfileEdit" component={StudentProfileEdit} />
           <Route path="/StudentRegister" component={StudentRegister} />
           <Route path="/Login">
             {isLoggedIn ? (

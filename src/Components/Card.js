@@ -28,156 +28,179 @@ const Card = ({ card, Img }) => {
           </h5>
         )}
 
-        {card.faculty_category &&
-          card.faculty_category.shortFacultyDescription && (
-            <p
-              className="card-text flex-grow-1"
-              style={{ fontSize: "0.875rem" }}
-            >
-              {card.faculty_category.shortFacultyDescription.length > 100
-                ? `${card.faculty_category.shortFacultyDescription.substring(
-                    0,
-                    100
-                  )}...`
-                : card.faculty_category.shortFacultyDescription}
-            </p>
-          )}
+        <p className="card-text ">
+          {card.description &&
+          card.description !== null &&
+          card.description.length > 100
+            ? `${card.description.substring(0, 70)}...`
+            : card.description}
+        </p>
 
-        <p className="card-text mt-auto">
-          {card.courseDescription &&
-          card.courseDescription !== null &&
-          card.courseDescription.length > 100
-            ? `${card.courseDescription.substring(0, 70)}...`
-            : card.courseDescription}
-        </p>
-        <p className="card-text mt-auto">
-          {card.shortDescription &&
-          card.shortDescription !== null &&
-          card.shortDescription.length > 100
-            ? `${card.shortDescription.substring(0, 70)}...`
-            : card.shortDescription}
-        </p>
-        <p className="card-text mt-auto">
-          {card.shortCourseDescription &&
-          card.shortCourseDescription !== null &&
-          card.shortCourseDescription.length > 100
-            ? `${card.shortCourseDescription.substring(0, 70)}...`
-            : card.shortCourseDescription}
-        </p>
-        {/* <p className="pb-3">{card.level}</p> */}
-        {/* <hr className="mt-auto" /> */}
         {card.faculty && (
           <>
-            <hr />
-            <div className="align-items-end">
-              <table className="table table-borderless">
-                <tbody>
-                  {(card.faculty.faculty_category || card.faculty.name) && (
-                    <tr>
-                      <th scope="row" className="px-0 pb-1">
-                        <i className="fa fa-laptop-code fa-lg"></i>
-                      </th>
-
-                      {/* <th scope="row" className="px-0 pb-1">
-                      <i className="fa fa-laptop-code fa-lg "></i>
-                    </th> */}
-
-                      <td className="pb-3 ">
-                        {card.faculty &&
-                          card.faculty.faculty_category &&
-                          card.faculty.faculty_category.facultyName}
-                        {card.faculty && card.faculty.name && card.faculty.name}
-                      </td>
-                    </tr>
-                  )}
-                  <tr>
-                    <th scope="row" className="px-0  pt-2">
-                      <i className="fa fa-graduation-cap fa-lg "></i>
-                    </th>
-                    <td className="pb-3">
-                      {card.courseLevel}
-                      {card.level}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-              <hr />
-              <div className="d-flex justify-content-between pt-2 text-center text-uppercase living-coral-text">
-                <div>
-                  {card.courseDelivery &&
-                    (() => {
-                      const courseDeliveryUpperCase =
-                        card.courseDelivery.toUpperCase();
-                      let iconClassName = "";
-                      let deliveryMethod = "";
-
-                      if (courseDeliveryUpperCase === "ON-CAMPUS") {
-                        iconClassName = "fa fa-users fa-lg ";
-                        deliveryMethod = "ON-CAMPUS";
-                      } else if (courseDeliveryUpperCase === "HYBRID") {
-                        iconClassName = "fa fa-exchange fa-lg ";
-                        deliveryMethod = "Hybrid";
-                      } else if (courseDeliveryUpperCase === "ONLINE") {
-                        iconClassName = "fa fa-desktop fa-lg ";
-                        deliveryMethod = "Online";
-                      }
-
-                      return (
-                        <div>
-                          <i className={iconClassName}></i>
-                          <p className="mb-0">{deliveryMethod}</p>
-                        </div>
-                      );
-                    })()}
-                  {card.delivery &&
-                    (() => {
-                      const courseDeliveryUpperCase =
-                        card.delivery.toUpperCase();
-                      let iconClassName = "";
-                      let deliveryMethod = "";
-
-                      if (courseDeliveryUpperCase === "ON-CAMPUS") {
-                        iconClassName = "fa fa-users fa-lg ";
-                        deliveryMethod = "ON-CAMPUS";
-                      } else if (courseDeliveryUpperCase === "HYBRID") {
-                        iconClassName = "fa fa-exchange fa-lg ";
-                        deliveryMethod = "Hybrid";
-                      } else if (courseDeliveryUpperCase === "ONLINE") {
-                        iconClassName = "fa fa-desktop fa-lg ";
-                        deliveryMethod = "Online";
-                      }
-
-                      return (
-                        <div>
-                          <i className={iconClassName}></i>
-                          <p className="mb-0">{deliveryMethod}</p>
-                        </div>
-                      );
-                    })()}
+            <div className="align-items-center">
+              <div className="d-flex flex-column align-items-center">
+                <div className="badge rounded-pill text-bg-primary text-center mb-1">
+                  {card.faculty &&
+                    card.faculty.faculty_category &&
+                    card.faculty.faculty_category.facultyName}
+                  {card.faculty && card.faculty.name && card.faculty.name}
                 </div>
-                <div>
-                  {(card.duration.durationName || card.duration.name) && (
-                    <>
-                      <i className="fas fa-clock-cap fa-lg"></i>
-                      <p className="">
-                        {card.duration.durationName}
-                        {card.duration.name}
-                      </p>
-                    </>
-                  )}
-                </div>
-                <div>
-                  {(card.duration.type || card.type) && (
-                    <>
-                      <i className="fas fa-calendar fa-lg"></i>
-                      <p className="">
-                        {card.duration.type}
-                        {card.type}
-                      </p>
-                    </>
-                  )}
+                <div className="badge rounded-pill text-bg-primary text-center mb-3">
+                  {card.level}
                 </div>
               </div>
+
+              {/* <div className="col-12">
+                <div className="card bg-primary-subtle text-primary border-0">
+                  <div className="card-body">
+                    <div className="row align-items-center">
+                      <div className="col-6">
+                        <div className="d-flex align-items-center">
+                          <span className="fs-6 bsb-w-35 bsb-h-35 text-bg-primary rounded-circle d-flex align-items-center justify-content-center me-2"></span>
+                          <div>
+                            <h6 className="m-0">Delivery</h6>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-4">
+                        <p className="ms-1 mb-0 text-muted">
+                          <ul
+                            className="list-unstyled mb-0"
+                            style={{ listStyleType: "disc" }}
+                          >
+                            {card.deliveryMode.map((mode, index) => (
+                              <li
+                                key={index}
+                                className="text-muted"
+                                style={{ whiteSpace: "nowrap" }}
+                              >
+                                {mode}
+                              </li>
+                            ))}
+                          </ul>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> */}
+              {/* <div className="col-12 mt-1">
+                <div className="card bg-primary-subtle text-primary border-0">
+                  <div className="card-body">
+                    <div className="row align-items-center">
+                      <div className="col-6">
+                        <div className="d-flex align-items-center">
+                          <span className="fs-6 bsb-w-35 bsb-h-35 text-bg-primary rounded-circle d-flex align-items-center justify-content-center me-2"></span>
+                          <div>
+                            <h6 className="m-0">Duration</h6>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-4">
+                        <p
+                          className="mb-0 text-muted"
+                          style={{ whiteSpace: "nowrap", fontSize: "15px" }}
+                        >
+                          {card.duration.name}
+                        </p>
+                        <p
+                          className="mb-0 text-muted"
+                          style={{ whiteSpace: "nowrap", fontSize: "15px" }}
+                        >
+                          ({card.duration.time} months)
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> */}
+
+              {/* <div className="col-12 mt-1 mb-1">
+                <div className="card bg-primary-subtle text-primary border-0">
+                  <div className="card-body">
+                    <div className="row align-items-center">
+                      <div className="col-6">
+                        <div className="d-flex align-items-center">
+                          <span className="fs-6 bsb-w-35 bsb-h-35 text-bg-primary rounded-circle d-flex align-items-center justify-content-center me-2"></span>
+                          <div>
+                            <h6 className="m-0">Type</h6>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-4">
+                        <p className="mb-0 text-muted">
+                          <ul
+                            className="list-unstyled mb-0"
+                            style={{ listStyleType: "disc" }}
+                          >
+                            {card.type.map((typeItem, index) => (
+                              <li key={index} style={{ whiteSpace: "nowrap" }}>
+                                {typeItem}
+                              </li>
+                            ))}
+                          </ul>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div> */}
+
+              {/* old desing */}
+              <div className="card-section3 bg-primary-subtle text-primary border-1 rounded-4 text-center p-2 mb-2">
+                <div className="row">
+                  <div className="col-md-4 ">
+                    <div className="mb-0">
+                      <strong className="mb-1">Delivery</strong>
+                      <p className="ms-2 mb-0 text-muted">
+                        {/* <strong className="mb-1">Delivery</strong> */}
+                        <ul
+                          className="list-unstyled mb-0"
+                          // style={{ listStyleType: "disc" }}
+                        >
+                          {card.deliveryMode.map((mode, index) => (
+                            <li key={index} className="text-muted">
+                              {mode}
+                            </li>
+                          ))}
+                        </ul>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="col-md-4 ">
+                    <div className="mb-0">
+                      {/* <p>
+                        <strong>Duration</strong>
+                      </p> */}
+                      <strong>Duration</strong>
+                      <p className="mb-0 text-muted mb-2">
+                        {card.duration.name} ({card.duration.time} months)
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="col-md-4">
+                    <div className="mb-0">
+                      {/* <p>
+                        <strong>Type</strong>
+                      </p> */}
+                      <strong>Type</strong>
+                      <p className="mb-0 text-muted">
+                        <ul
+                          className="list-unstyled mb-0"
+                          // style={{ listStyleType: "disc" }}
+                        >
+                          {card.type.map((typeItem, index) => (
+                            <li key={index}>{typeItem}</li>
+                          ))}
+                        </ul>
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {/* End old desing */}
             </div>
           </>
         )}

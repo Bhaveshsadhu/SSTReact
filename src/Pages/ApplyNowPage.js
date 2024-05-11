@@ -5,6 +5,7 @@ import {
   SessionDropdownURL,
   branchDropdownURL,
   ScholarshipsURL,
+  createApplicationURL,
 } from "../settings";
 import { ApiCall } from "../Components/ApiCall";
 
@@ -23,7 +24,7 @@ function ApplyNow() {
     const fetchData = async () => {
       try {
         const data = await ApiCall(StudentProfileURL);
-        console.log("student data : " + data);
+        // console.log("student data : " + data);
         const studentId = data.id;
         setStudentData(data);
       } catch (error) {
@@ -84,8 +85,39 @@ function ApplyNow() {
   if (!studentData) {
     return <div>Loading...</div>;
   }
-  const handleSubmit = () => {
-    window.alert("You Applied This course;");
+  const handleSubmit = async () => {
+    try {
+      if (!selectedSession || !selectedBranch || !selectedScholarship) {
+        const missingFields = [];
+        if (!selectedSession) missingFields.push("Session");
+        if (!selectedBranch) missingFields.push("Branch");
+        if (!selectedScholarship) missingFields.push("Scholarship");
+
+        window.alert(`Please select ${missingFields.join(", ")}.`);
+        return;
+      }
+      const requestBody = {
+        student_id: studentData.id,
+        course_id: cardData.id,
+        branch_id: selectedBranch,
+        course_session_id: selectedSession,
+        scholarship_id: selectedScholarship ? [selectedScholarship] : [],
+      };
+
+      const response = await ApiCall(createApplicationURL, "POST", {
+        body: requestBody,
+      });
+      // console.log("Form data:", JSON.stringify(requestBody));
+      // console.log("Response data:", JSON.stringify(response));
+
+      if (response.success) {
+        window.alert("Application submitted successfully!");
+      } else {
+        window.alert(response.message);
+      }
+    } catch (error) {
+      console.error("Error submitting application:", error);
+    }
   };
   return (
     <div className="container mt-2 mb-2">

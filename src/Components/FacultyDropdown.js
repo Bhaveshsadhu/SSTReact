@@ -20,7 +20,7 @@ const FacultyDropdown = ({ cachedData }) => {
       try {
         setLoading(true);
         if (cachedData) {
-          console.log("This is call for FacultyDropDown : Cached data");
+          // console.log("This is call for FacultyDropDown : Cached data");
           setFaculties(
             cachedData.allFacultyCategories.map((faculty) => ({
               id: faculty.id,
@@ -30,7 +30,7 @@ const FacultyDropdown = ({ cachedData }) => {
           );
         } else {
           // console.log("calling API : ");
-          console.log("This is call for FacultyDropDown : API CALL");
+          // console.log("This is call for FacultyDropDown : API CALL");
           fetchData();
         }
         setLoading(false);

@@ -6,7 +6,7 @@ const API_BASE_URL = "http://sstv5.cc:8080/api/apiV1";
 
 const LANDING_PAGE_URL = API_BASE_URL + "/landingPageMaker";
 const SearchURL = API_BASE_URL + "/search?query=";
-const StudentRegisterURL = API_BASE_URL + "/student/register";
+const StudentRegisterURL = API_BASE_URL + "/register";
 const allCourses = API_BASE_URL + "/courses";
 const loginURL = API_BASE_URL + "/login";
 const logoutURL = API_BASE_URL + "/logout";
@@ -15,6 +15,8 @@ const StudentApplicationsURL = API_BASE_URL + "/student/applications";
 const SessionDropdownURL = API_BASE_URL + "/ajax/sessions?courseId=";
 const branchDropdownURL = API_BASE_URL + "/ajax/branches?sessionId=";
 const ScholarshipsURL = API_BASE_URL + "/ajax/scholarships?courseId=";
+const createApplicationURL = API_BASE_URL + "/student/applications";
+const updateStudentURL = API_BASE_URL + "/student/profile/";
 
 const DEBUG_MODE = false;
 const FEATURE_FLAG_ENABLED = true;
@@ -65,4 +67,6 @@ export {
   SessionDropdownURL,
   branchDropdownURL,
   ScholarshipsURL,
+  createApplicationURL,
+  updateStudentURL,
 };

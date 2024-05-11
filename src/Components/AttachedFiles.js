@@ -15,8 +15,8 @@ const FileItem = ({ name, icon, size }) => {
     const parts = icon.split("/");
     const fileNameWithExtension = parts[parts.length - 1];
     const [fileName, extension] = fileNameWithExtension.split(".");
-    console.log("File Name:", fileName); // Output: pdf
-    console.log("Extension:", extension); // Output: svg
+    // console.log("File Name:", fileName); // Output: pdf
+    // console.log("Extension:", extension); // Output: svg
     switch (extension) {
       case "pdf":
         return <i class="fa-solid fa-file-pdf fa-2x"></i>;

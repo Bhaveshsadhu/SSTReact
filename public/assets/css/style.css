@@ -288,6 +288,10 @@ body {
   cursor: pointer;
 }
 
+.card-section3 {
+  font-size: 12px;
+}
+
 /* most popular courses cards */
 
 .pagination {

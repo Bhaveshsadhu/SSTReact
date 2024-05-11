@@ -3,13 +3,16 @@ import { useParams } from "react-router-dom";
 import { tasksData } from "./applicationdata";
 import { StudentApplicationsURL } from "../settings";
 import { ApiCall } from "../Components/ApiCall";
+import AttachedFiles from "../Components/AttachedFiles";
 
 const StudentApplication = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [application, setApplication] = useState(null);
-  const { id = 1 } = useParams();
+  const { id } = useParams();
   const [displayCount, setDisplayCount] = useState(10);
   const [ascendingOrder, setAscendingOrder] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState("Status");
+  const [selectedUser, setSelectedUser] = useState("User 1");
   //   const [activityData, setActivityData] = useState([...]); // Initialize your activity data array
   const activityData = [
     {
@@ -177,6 +180,9 @@ const StudentApplication = () => {
     // Repeat this structure for each entry, updating the date accordingly
   ];
 
+  const statusOptions = ["Pending", "Lodged", "Submitted"];
+  const userOptions = ["user1", "user2", "user3"];
+
   const toggleOrder = () => {
     setAscendingOrder((prevOrder) => !prevOrder);
   };
@@ -193,6 +199,14 @@ const StudentApplication = () => {
   const handleLoadMore = () => {
     // Increase the display count by 10 when "Load More" is clicked
     setDisplayCount(displayCount + 10);
+  };
+
+  const handleStatusSelect = (status) => {
+    setSelectedStatus(status);
+  };
+
+  const handleUserSelect = (user) => {
+    setSelectedUser(user);
   };
 
   useEffect(() => {
@@ -228,14 +242,16 @@ const StudentApplication = () => {
 
           <div className="col-md-4 d-flex justify-content-end ">
             <button
-              className="btn btn-primary "
+              className="btn btn-outline-secondary "
               type="button"
               onClick={toggleOffcanvas}
             >
               {isOpen ? (
-                <i className="fas fa-angle-double-right"></i>
+                // <i className="fas fa-angle-double-right"></i>
+                <i class="leftarrow fa-solid fa-circle-chevron-up "></i>
               ) : (
-                <i className="fas fa-angle-double-left"></i>
+                // <i className="fas fa-angle-double-left"></i>
+                <i class="rightarrow fa-solid fa-circle-chevron-up fa-lg"></i>
               )}
             </button>
 
@@ -330,7 +346,7 @@ const StudentApplication = () => {
                       <div className="card-body">
                         <div className="row">
                           <div className="col-sm-3">
-                            <h6 className="mb-0">course_id</h6>
+                            <h6 className="mb-0">Application ID</h6>
                           </div>
                           <div className="col-sm-9 text-secondary">
                             {application && application.id}
@@ -340,22 +356,20 @@ const StudentApplication = () => {
                         <hr />
                         <div className="row">
                           <div className="col-sm-3">
-                            <h6 className="mb-0">courseName</h6>
+                            <h6 className="mb-0">course_id</h6>
                           </div>
                           <div className="col-sm-9 text-secondary">
-                            {/* {studentData.studentEmail} */}
-                            courseName
+                            {application && application.course_id}
                           </div>
                         </div>
                         <hr />
 
                         <div className="row">
                           <div className="col-sm-3">
-                            <h6 className="mb-0">Branch Name</h6>
+                            <h6 className="mb-0">branch_id</h6>
                           </div>
                           <div className="col-sm-9 text-secondary">
-                            {/* {studentData.studentPhone} */}
-                            branchName
+                            {application && application.branch_id}
                           </div>
                         </div>
                         <hr />
@@ -364,7 +378,7 @@ const StudentApplication = () => {
                             <h6 className="mb-0">Application Date</h6>
                           </div>
                           <div className="col-sm-9 text-secondary">
-                            {application && application.applicationDate}
+                            {application && application.applied_date}
                           </div>
                         </div>
                         <hr />
@@ -373,7 +387,7 @@ const StudentApplication = () => {
                             <h6 className="mb-0">Application Comments</h6>
                           </div>
                           <div className="col-sm-9 text-secondary">
-                            {application && application.applicationComments}
+                            {application && application.comments}
                           </div>
                         </div>
                         <hr />
@@ -382,7 +396,7 @@ const StudentApplication = () => {
                             <h6 className="mb-0">Application Reviewed By</h6>
                           </div>
                           <div className="col-sm-9 text-secondary">
-                            {application && application.applicationReviewedBy}
+                            {application && application.reviewed_by}
                           </div>
                         </div>
                         <hr />
@@ -391,7 +405,7 @@ const StudentApplication = () => {
                             <h6 className="mb-0">Application Reviewed At</h6>
                           </div>
                           <div className="col-sm-9 text-secondary">
-                            {application && application.applicationReviewedAt}
+                            {application && application.reviewed_at}
                           </div>
                         </div>
                         <hr />
@@ -403,47 +417,110 @@ const StudentApplication = () => {
                 </div>
               </div>
             </div>
-          </div>
-          {/* End of start Application */}
-          {/* upload documents */}
-          <div className="col-md-4 ">
-            <div className="bg-white p-5 rounded shadow-sm border">
-              <div className="dropzone d-block">
-                <label htmlFor="files" className="dropzone-container">
-                  <div className="file-icon">
-                    <i className="fa-solid fa-file-circle-plus text-primary"></i>
-                  </div>
-                  <div className="text-center pt-3 px-5">
-                    <p className="w-80 h5 text-dark fw-bold">
-                      Drag your documents, photos or videos here to start
-                      uploading.
-                    </p>
-                    <div className="hr-sect">or</div>
-                    <button className="btn btn-primary mb-2">
-                      Browse Files
-                    </button>
-                  </div>
-                </label>
-                <input
-                  id="files"
-                  name="files[]"
-                  type="file"
-                  className="file-input"
-                />
-              </div>
-            </div>
-          </div>
-          {/* end upload documents */}
-
-          {/* start Activity */}
-          <div className="col-md-8 ">
+            {/* start activity  */}
             <div>
-              <div className="d-flex justify-content-end mb-3 ">
-                <button onClick={toggleOrder} className="btn btn-primary me-2">
-                  {ascendingOrder ? "Sort Descending" : "Sort Ascending"}
-                </button>
+              <div className="d-flex justify-content-between mb-3 mt-2">
+                {/* start drop down for Ascending/Descding */}
+                <div className="col-12 d-flex m-2 bg-white p-2 rounded shadow-sm border">
+                  <div class="d-flex text-center">Activity</div>
+
+                  <div className="dropdown ms-auto ">
+                    <button
+                      className="btn btn-outline-secondary dropdown-toggle"
+                      type="button"
+                      id="orderDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {ascendingOrder ? "Ascending" : "Descending"}
+                    </button>
+                    <ul
+                      className="dropdown-menu"
+                      aria-labelledby="orderDropdown"
+                    >
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => toggleOrder(true)}
+                        >
+                          Ascending
+                        </button>
+                      </li>
+                      <li>
+                        <button
+                          className="dropdown-item"
+                          onClick={() => toggleOrder(false)}
+                        >
+                          Descending
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                  {/* end drop down for Ascending/Descding */}
+                  {/* drop down for status */}
+
+                  <div className="dropdown ms-2">
+                    <button
+                      className="btn btn-outline-secondary dropdown-toggle"
+                      type="button"
+                      id="statusDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {selectedStatus || "Select Status"}
+                    </button>
+                    <ul
+                      className="dropdown-menu"
+                      aria-labelledby="statusDropdown"
+                    >
+                      {statusOptions.map((status, index) => (
+                        <li key={index}>
+                          <button
+                            className="dropdown-item"
+                            onClick={() => handleStatusSelect(status)}
+                          >
+                            {status}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* end drop down for status */}
+
+                  {/* drop down for users */}
+
+                  <div className="dropdown ms-2 me-2">
+                    <button
+                      className="btn btn-outline-secondary dropdown-toggle"
+                      type="button"
+                      id="userDropdown"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      {selectedUser || "Select User"}
+                    </button>
+                    <ul
+                      className="dropdown-menu"
+                      aria-labelledby="userDropdown"
+                    >
+                      {userOptions.map((user, index) => (
+                        <li key={index}>
+                          <button
+                            className="dropdown-item"
+                            onClick={() => handleUserSelect(user)}
+                          >
+                            {user}
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* end drop down for users */}
+                </div>
               </div>
-              <ul className="timeline">
+              <ul className="timeline bg-white pe-2 rounded shadow-sm border">
                 {sortedActivityData
                   .slice(0, displayCount)
                   .map((item, index) => (
@@ -493,14 +570,18 @@ const StudentApplication = () => {
                   ))}
               </ul>
               {displayCount < activityData.length && (
-                <button onClick={handleLoadMore} className="btn btn-primary">
+                <button
+                  onClick={handleLoadMore}
+                  className="btn btn-outline-secondary"
+                >
                   Load More
                 </button>
               )}
             </div>
+            {/* end of activity */}
           </div>
-          {/* End of start Activity */}
-          {/* all Attached Documents */}
+          {/* End of start Application */}
+          {/* upload documents */}
           <div className="col-md-4 ">
             <div className="bg-white p-5 rounded shadow-sm border">
               <div className="dropzone d-block">
@@ -527,8 +608,13 @@ const StudentApplication = () => {
                 />
               </div>
             </div>
+            {/* start Attached documents */}
+            <div className="bg-white p-5 rounded shadow-sm border mt-2 d-flex justify-content-start">
+              <AttachedFiles />
+            </div>
+
+            {/* End Attached documents */}
           </div>
-          {/* End of all Attached Documents */}
         </div>
       </div>
 
