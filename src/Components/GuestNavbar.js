@@ -6,7 +6,7 @@ const GuestNavbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const history = useHistory();
 
-  const logoImg = "../assets/img/logo192.png";
+  const logoImg = "/assets/img/logo192.png";
 
   const handleSearch = (event) => {
     event.preventDefault();

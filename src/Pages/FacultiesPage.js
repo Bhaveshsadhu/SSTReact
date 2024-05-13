@@ -1,16 +1,40 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { API_BASE_URL, DEBUG_MODE } from "../settings";
+import { FacultyCategoery_cardsPerPage, API_BASE_URL } from "../settings";
 import { fetchDataFromAPI } from "../Components/fetchDataFromAPI ";
+import { useParams } from "react-router-dom";
 
-const FacultiesPage = () => {
-  const title = "Most Popular Courses";
-  const [cardsPerPage] = useState(5);
+import Card from "../Components/Card";
+// const cachedData = {};
+const FacultiesPage = ({ cachedData }) => {
+  // const title = "Most Popular Courses";
+  const [cardsPerRow, setCardsPerRow] = useState(4);
+  const [loading, setLoading] = useState(true);
+  const { id } = useParams();
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  const handleResize = () => {
+    const screenWidth = window.innerWidth;
+    if (screenWidth >= 992) {
+      setCardsPerRow(FacultyCategoery_cardsPerPage["largeScreen"]); // Large screen
+    } else if (screenWidth >= 768) {
+      setCardsPerRow(FacultyCategoery_cardsPerPage["mediumScreen"]); // Medium screen
+    } else if (screenWidth >= 576) {
+      setCardsPerRow(FacultyCategoery_cardsPerPage["smallScreen"]); // Small screen
+    } else {
+      setCardsPerRow(FacultyCategoery_cardsPerPage["extraSmallScreen"]); // Extra small screen
+    }
+  };
+
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
   const [allCardsData, setAllCardsData] = useState([]);
-  const { id } = useParams();
-  // const Img = "assets/img/courses.jpg";
   const Img = "/assets/img/courses.jpg";
 
   useEffect(() => {
@@ -18,85 +42,70 @@ const FacultiesPage = () => {
   }, []);
 
   const fetchData = () => {
-    // console.log("this is facultiesPage");
-    fetchDataFromAPI(API_BASE_URL + "/facultyCategory/" + id + "/courses")
-      .then((response) => {
-        if (response && Array.isArray(response.data)) {
-          setAllCardsData(response.data);
-          setTotalPages(Math.ceil(response.length / cardsPerPage));
-        } else {
-          console.error("Data is empty or not in expected format.");
+    setLoading(true);
+
+    fetchDataFromAPI(
+      API_BASE_URL + "/facultyCategory/" + id + "/courses",
+      "GET"
+    )
+      .then((data) => {
+        // console.log("This is calling from MOST_POPULAR_COURSES : API Data");
+        if (data && Array.isArray(data.data)) {
+          // Cache the fetched data
+          // cachedData[LANDING_PAGE_URL] = data;
+          // cachedData = data;
+          setAllCardsData(data.data);
+          setTotalPages(Math.ceil(data.data.length / cardsPerRow));
+          setLoading(false);
+          // Print message indicating data is from API
+          // console.log("MOST_POPULAR_COURSES_Data is coming from API");
         }
       })
       .catch((error) => {
         console.error("Error:", error);
+        setLoading(false);
       });
   };
+  // const fetchData = () => {
+  //   // console.log("this is facultiesPage");
+  //   fetchDataFromAPI(API_BASE_URL + "/facultyCategory/" + id + "/courses")
+  //     .then((response) => {
+  //       if (response && Array.isArray(response.data)) {
+  //         setAllCardsData(response.data);
+  //         setTotalPages(Math.ceil(response.length / cardsPerPage));
+  //       } else {
+  //         console.error("Data is empty or not in expected format.");
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error:", error);
+  //     });
+  // };
 
   const renderCards = () => {
-    const startIndex = (currentPage - 1) * cardsPerPage;
-    const endIndex = Math.min(startIndex + cardsPerPage, allCardsData.length);
+    if (loading) {
+      // return renderLoader();
+    }
+    if (!allCardsData) {
+      return null;
+    }
+    const startIndex = (currentPage - 1) * cardsPerRow;
+    const endIndex = Math.min(startIndex + cardsPerRow, allCardsData.length);
     const cardsToShow = allCardsData.slice(startIndex, endIndex);
 
     return cardsToShow.map((card, index) => (
-      <div key={index} className="col mb-4 position-relative">
-        <div
-          className="card h-100 hover-card"
-          style={{ transition: "all 0.3s ease" }}
-        >
-          {/* bootstrap ribbon */}
-          <div class="mpribbon">
-            <span>New</span>
-          </div>
-          {/* End bootstrap ribbon */}
-          <img src={Img} className="card-img-top" alt="..." />
-
-          <div className="card-body d-flex flex-column">
-            <h5 className="card-title fw-bold" style={{ fontSize: "1.25rem" }}>
-              {card.name.length > 20
-                ? `${card.name.substring(0, 20)}...`
-                : card.name}
-            </h5>
-            <p className="card-text" style={{ fontSize: "0.875rem" }}>
-              {card.description !== null && card.description.length > 100
-                ? `${card.description.substring(0, 100)}...`
-                : card.description}
-            </p>
-            <hr class="my-0" />
-            <div className="align-items-end">
-              <div className=" d-flex gap-2 mb-2  justify-content-center">
-                <div className="flex-grow-1 text-center ">
-                  <strong className=" text-dark">{card.faculty.id}</strong>
-                </div>
-
-                <div className="flex-grow-1 text-center ">
-                  <strong className="text-dark">{card.level}</strong>
-                </div>
-              </div>
-              <hr class="my-0" />
-              <div className="d-flex justify-content-between mb-3">
-                <h6 className="mb-0 text-warning">Delivery</h6>
-                <h6 className=" mb-0 text-warning">{card.deliveryMode}</h6>
-              </div>
-              <hr class="my-0" />
-            </div>
-
-            <strong className=" text-dark">{card.faculty.id}</strong>
-            <a
-              href={`/courses/${card.id}/${encodeURIComponent(title)}`}
-              className="btn btn-primary mt-auto align-self-center"
-            >
-              Read More
-            </a>
-          </div>
-        </div>
+      <div
+        key={index}
+        className={`col mb-4 position-relative col-${12 / cardsPerRow}`}
+      >
+        <Card card={card} Img={Img} />
       </div>
     ));
   };
 
   const renderPagination = () => {
     const paginationItems = [];
-    const maxPagesToShow = 5; // Number of pagination links to display
+    const maxPagesToShow = 5;
 
     paginationItems.push(
       <li
@@ -115,11 +124,9 @@ const FacultiesPage = () => {
       </li>
     );
 
-    // Calculate start and end page numbers
     let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
     let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
 
-    // Adjust start and end page numbers if necessary
     if (endPage - startPage + 1 < maxPagesToShow) {
       startPage = Math.max(1, endPage - maxPagesToShow + 1);
     }
@@ -160,7 +167,7 @@ const FacultiesPage = () => {
   };
 
   const handlePaginationClick = (page, event) => {
-    event.preventDefault(); // Prevent default behavior of reloading the page
+    event.preventDefault();
     if (page !== currentPage) {
       setCurrentPage(page);
     }
@@ -168,12 +175,10 @@ const FacultiesPage = () => {
 
   return (
     <div className="container mx-auto mt-5">
-      {/* <h3 className="mb-4 text-center text-primary">Most Popular Courses</h3> */}
-      {/* <h3 className="mb-4 text-center text-primary">Most Popular Courses</h3> */}
-
-      <div className="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-4">
-        {renderCards()}
+      <div className="col-md-6">
+        {/* <h3 className="mb-4  text-primary">Most Popular Courses</h3> */}
       </div>
+      <div className={`row g-4`}>{renderCards()}</div>
       <nav aria-label="Page navigation">
         <ul className="pagination justify-content-center mt-4">
           {renderPagination()}

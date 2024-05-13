@@ -50,6 +50,13 @@ export const MostAppliedFaculties_cardsPerPage = {
   extraSmallScreen: 1,
 };
 
+export const FacultyCategoery_cardsPerPage = {
+  //To Display faculties categoery cards per page with different screen sizes
+  largeScreen: 4,
+  mediumScreen: 3,
+  smallScreen: 2,
+  extraSmallScreen: 1,
+};
 // Export the settings
 export {
   API_BASE_URL,
