@@ -6,14 +6,11 @@ import {
 } from "../settings";
 import { fetchDataFromAPI } from "./fetchDataFromAPI ";
 import Card from "./Card";
-// const cachedData = {};
+
 const MostAppliedFaculties = ({ cachedData }) => {
   const [cardsPerRow, setCardsPerRow] = useState(4);
   const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
-  const [autoSlideInterval, setAutoSlideInterval] = useState(null);
-  const [isDragging, setIsDragging] = useState(false);
-  const [startX, setStartX] = useState(0);
   const containerRef = useRef(null);
   const [totalPages, setTotalPages] = useState(0);
   const [allCardsData, setAllCardsData] = useState([]);
@@ -32,22 +29,20 @@ const MostAppliedFaculties = ({ cachedData }) => {
   }, []);
 
   useEffect(() => {
-    if (autoSlideInterval) {
-      const interval = setInterval(autoSlide, 5000);
-      return () => clearInterval(interval);
-    }
-  }, [autoSlideInterval]);
+    const interval = setInterval(autoSlide, 5000);
+    return () => clearInterval(interval);
+  }, [totalPages]);
 
   const handleResize = () => {
     const screenWidth = window.innerWidth;
     if (screenWidth >= 992) {
-      setCardsPerRow(MostAppliedFaculties_cardsPerPage["largeScreen"]); // Large screen
+      setCardsPerRow(MostAppliedFaculties_cardsPerPage["largeScreen"]);
     } else if (screenWidth >= 768) {
-      setCardsPerRow(MostAppliedFaculties_cardsPerPage["mediumScreen"]); // Medium screen
+      setCardsPerRow(MostAppliedFaculties_cardsPerPage["mediumScreen"]);
     } else if (screenWidth >= 576) {
-      setCardsPerRow(MostAppliedFaculties_cardsPerPage["smallScreen"]); // Small screen
+      setCardsPerRow(MostAppliedFaculties_cardsPerPage["smallScreen"]);
     } else {
-      setCardsPerRow(MostAppliedFaculties_cardsPerPage["extraSmallScreen"]); // Extra small screen
+      setCardsPerRow(MostAppliedFaculties_cardsPerPage["extraSmallScreen"]);
     }
   };
 
@@ -55,31 +50,21 @@ const MostAppliedFaculties = ({ cachedData }) => {
     setLoading(true);
 
     if (cachedData) {
-      // Data is already cached, use it
       setAllCardsData(cachedData.popularFaculties);
       setTotalPages(
         Math.ceil(cachedData.popularFaculties.length / cardsPerRow)
       );
       setLoading(false);
-      // Print message indicating data is from cache
-      // console.log("This is calling from MOSTAPPLIEDFACULTY_Data : Cached Data");
     } else {
-      // Data is not cached, fetch it from API
       fetchDataFromAPI(LANDING_PAGE_URL, "GET")
         .then((data) => {
           if (data && Array.isArray(data.popularFaculties)) {
-            // Cache the fetched data
             cachedData = data;
-
             setAllCardsData(data.popularFaculties);
             setTotalPages(
               Math.ceil(data.popularFaculties.length / cardsPerRow)
             );
             setLoading(false);
-            // Print message indicating data is from API
-            // console.log(
-            //   "This is calling from MOSTAPPLIEDFACULTY_Data : API Data"
-            // );
           }
         })
         .catch((error) => {
@@ -89,80 +74,21 @@ const MostAppliedFaculties = ({ cachedData }) => {
     }
   };
 
-  // const autoSlide = () => {
-  //   if (activeIndex < totalPages - 1) {
-  //     setActiveIndex(activeIndex + 1);
-  //   } else {
-  //     setActiveIndex(0);
-  //   }
-  // };
   const autoSlide = () => {
     setActiveIndex((prevIndex) => (prevIndex + 1) % totalPages);
   };
 
-  const handleMouseDown = (e) => {
-    setIsDragging(true);
-    setStartX(e.pageX - containerRef.current.offsetLeft);
+  const handlePrev = () => {
+    setActiveIndex((prevIndex) => Math.max(prevIndex - 1, 0));
   };
 
-  // const handleMouseMove = (e) => {
-  //   if (!isDragging) return;
-  //   const x = e.pageX - containerRef.current.offsetLeft;
-  //   const deltaX = x - startX;
-  //   if (deltaX < -50) {
-  //     setActiveIndex((prevIndex) =>
-  //       prevIndex >= totalPages - 1 ? 0 : prevIndex + 1
-  //     );
-  //     setIsDragging(false);
-  //   } else if (deltaX > 50) {
-  //     setActiveIndex((prevIndex) =>
-  //       prevIndex === 0 ? totalPages - 1 : prevIndex - 1
-  //     );
-  //     setIsDragging(false);
-  //   }
-  // };
-  const handleMouseMove = (e) => {
-    if (!isDragging) return;
-    const x = e.pageX - containerRef.current.offsetLeft;
-    const deltaX = x - startX;
-
-    // Determine the new active index
-    let newActiveIndex = activeIndex;
-    if (deltaX < -50) {
-      newActiveIndex = Math.min(activeIndex + 1, totalPages - 1);
-    } else if (deltaX > 50) {
-      newActiveIndex = Math.max(activeIndex - 1, 0);
-    }
-
-    // Update the active index only if it changes and it's within bounds
-    if (
-      newActiveIndex !== activeIndex &&
-      newActiveIndex >= 0 &&
-      newActiveIndex < totalPages
-    ) {
-      setActiveIndex(newActiveIndex);
-    }
-
-    setIsDragging(false);
+  const handleNext = () => {
+    setActiveIndex((prevIndex) => Math.min(prevIndex + 1, totalPages - 1));
   };
-
-  const handleMouseUp = () => {
-    setIsDragging(false);
-  };
-
-  // const renderLoader = () => {
-  //   return (
-  //     <div className="d-flex justify-content-center mt-5">
-  //       <div className="spinner-border text-primary" role="status">
-  //         <span className="visually-hidden">Loading...</span>
-  //       </div>
-  //     </div>
-  //   );
-  // };
 
   const renderCards = () => {
     if (loading) {
-      // return renderLoader();
+      return null; // You can render a loading indicator here if needed
     }
     if (!allCardsData) {
       return null;
@@ -182,20 +108,42 @@ const MostAppliedFaculties = ({ cachedData }) => {
   };
 
   return (
-    <div
-      className="container mx-auto mt-5 scrollable-container"
-      ref={containerRef}
-      onMouseDown={handleMouseDown}
-      onMouseMove={handleMouseMove}
-      onMouseUp={handleMouseUp}
-      onMouseLeave={handleMouseUp}
-    >
+    <div className="container mx-auto mt-5 scrollable-container">
       <div className="row">
-        <div className="col-md-6">
-          <h3 className="mb-4  text-primary">Most Applied Faculties</h3>
+        <div className="row">
+          <div className="col-4">
+            <button
+              className="btn btn-primary mb-3 me-1 justify-content-start"
+              type="button"
+              onClick={handlePrev}
+              disabled={activeIndex === 0} // Disable if activeIndex is 0
+            >
+              <i className="fa fa-arrow-left"></i>
+            </button>
+          </div>
+          <div className="col-4 d-flex justify-content-center">
+            <h3 className="mb-4 text-primary">Most Applied Faculties</h3>
+          </div>
+          <div className="col-4 d-flex justify-content-end">
+            <button
+              className="btn btn-primary mb-3"
+              type="button"
+              onClick={handleNext}
+              disabled={activeIndex >= allCardsData.length - cardsPerRow} // Disable if at last page
+            >
+              <i className="fa fa-arrow-right"></i>
+            </button>
+          </div>
         </div>
+
+        {/* <div className="col-md-6">
+          <h3 className="mb-4 text-primary">Most Applied Faculties</h3>
+        </div> */}
+        <div className="col-md-6 d-flex justify-content-end align-items-center"></div>
       </div>
-      <div className={`row g-4`}>{renderCards()}</div>
+      <div className="row g-4" ref={containerRef}>
+        {renderCards()}
+      </div>
     </div>
   );
 };

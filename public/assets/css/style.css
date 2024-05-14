@@ -317,11 +317,12 @@ body {
 .searchLinks {
   display: flex;
   flex-direction: row;
-  font-weight: bold;
+  /* font-weight: bold; */
 }
 
 .searchLinks p {
-  margin-right: 20px;
+  margin-right: 10px;
+  /* white-space: "nowrap"; */
 }
 
 .no-data-message {

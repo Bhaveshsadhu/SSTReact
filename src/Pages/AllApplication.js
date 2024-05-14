@@ -8,7 +8,12 @@ const AllApplication = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const applicationdata = await ApiCall(StudentApplicationsURL);
+        const data = await ApiCall(StudentProfileURL);
+        const studentId = data.id;
+        console.log("student id : " + studentId);
+        const applicationdata = await ApiCall(
+          StudentApplicationsURL + "?id=" + studentId
+        );
         setApplication(applicationdata);
       } catch (error) {
         console.error(error.message);
@@ -21,7 +26,7 @@ const AllApplication = () => {
   return (
     <div className="container">
       <div className="main-body">
-        <div className="col-md-12 mt-5">
+        <div className="col-md-12">
           <div className="card mb-3">
             <div className="card-body">
               <div className="tab-content">
@@ -32,15 +37,16 @@ const AllApplication = () => {
                       {/* Table Header */}
                       <thead>
                         <tr>
-                          <td colSpan="4" style={{ textAlign: "center" }}>
+                          <td colSpan="5" style={{ textAlign: "center" }}>
                             <b>Applications</b>
+                            <hr />
                           </td>
                         </tr>
                         <tr>
                           <th>ID</th>
-                          <th>Title</th>
-                          <th>Category</th>
-                          <th>Progress</th>
+                          <th>course_id</th>
+                          <th>branch_id</th>
+                          <th>status_id</th>
                         </tr>
                       </thead>
                       {/* Table Body */}
@@ -51,27 +57,20 @@ const AllApplication = () => {
                               <td>{course.id}</td>
                               <td>
                                 <a href={`/StudentApplication/${course.id}`}>
-                                  {course.course.courseName}
+                                  {course.course_id}
                                 </a>
                               </td>
-                              <td>{course.course.shortCourseDescription}</td>
+                              <td>{course.branch_id}</td>
                               <td>
                                 <div className="progress">
-                                  {course.status.status}
-                                  {/* <div
-                                        className="progress-bar"
-                                        role="progressbar"
-                                        style={{ width: "50%" }}
-                                        aria-valuenow="50"
-                                        aria-valuemin="0"
-                                        aria-valuemax="100"
-                                      ></div> */}
+                                  {course.status_id}
                                 </div>
                               </td>
                             </tr>
                           ))}
                       </tbody>
                     </table>
+                    <hr />
                     <div className="row">
                       <div className="col-md-4 col-md-offset-4 text-center">
                         <ul className="pagination" id="myPager"></ul>
@@ -80,6 +79,19 @@ const AllApplication = () => {
                   </div>
                 </div>
                 {/* /Home Tab */}
+
+                {/* Messages Tab */}
+                <div className="tab-pane" id="messages">
+                  {/* Messages Content */}
+                  <h2></h2>
+                  <ul className="list-group">
+                    {/* Message items */}
+                    {/* These can be added dynamically */}
+                    <li className="list-group-item text-muted">Inbox</li>
+                    {/* Add more message items */}
+                  </ul>
+                </div>
+                {/* /Messages Tab */}
               </div>
             </div>
           </div>

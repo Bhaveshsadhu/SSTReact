@@ -26,7 +26,7 @@ export const fetchDataFromAPI = async (url, method = "GET", params = {}) => {
 
     // console.log("url and body : " + url + " " + JSON.stringify(params));
     const response = await fetch(url, requestOptions);
-
+    // console.log("Response data : " + JSON.stringify(response));
     // Check for error status before parsing response
     if (!response.ok) {
       throw new Error("Network response was not ok");

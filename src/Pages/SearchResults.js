@@ -6,11 +6,11 @@ import { fetchDataFromAPI } from "../Components/fetchDataFromAPI ";
 const SearchResults = () => {
   const { searchTerm } = useParams();
   const [filteredData, setFilteredData] = useState([]);
-  // const [paginationLinks, setPaginationLinks] = useState([]);
   const [selectedCity, setSelectedCity] = useState("");
   const [originalData, setOriginalData] = useState([]);
   const [selectedMode, setSelectedMode] = useState("");
   const [selectedDurations, setSelectedDurations] = useState([]);
+  const [selecteDelieveryModes, setSelecteDelieveryModes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -35,32 +35,54 @@ const SearchResults = () => {
   };
 
   const filter = (filters) => {
-    let filtered = [...originalData];
-
-    filtered = filtered.filter((course) => {
-      const cityMatch = !filters.city || course.location === filters.city;
-      const modeMatch = !filters.mode || course.mode === filters.mode;
-      const durationMatch =
-        !filters.durations ||
-        filters.durations.length === 0 ||
-        filters.durations.includes(course.duration);
-
-      return cityMatch && modeMatch && durationMatch;
-    });
-    if (filtered.length === 0) {
-      setFilteredData("No data");
-      // setPaginationLinks([]); // Empty pagination links
+    if (!filteredData || filteredData.length === 0) {
+      setFilteredData([]);
       return;
     }
 
-    setFilteredData(filtered); // Set filtered data
-    // setPaginationLinks(filtered); // Update pagination links
+    let filtered = filteredData.filter((course) => {
+      // Check if course object exists and has deliveryMode property
+      if (!course || !Array.isArray(course.deliveryMode)) {
+        return false;
+      }
+
+      const modeMatch =
+        !filters.mode ||
+        filters.mode.length === 0 ||
+        course.type.some((mode) =>
+          filters.mode.map((m) => m.toUpperCase()).includes(mode.toUpperCase())
+        );
+
+      const deliveryModeMatch =
+        !filters.delievryModes ||
+        filters.delievryModes.length === 0 ||
+        course.deliveryMode.some((mode) =>
+          filters.delievryModes.includes(mode)
+        );
+
+      const durationMatch =
+        !filters.durations ||
+        filters.durations.length === 0 ||
+        filters.durations.includes(course.duration.name);
+
+      return modeMatch && deliveryModeMatch && durationMatch;
+    });
+
+    if (filtered.length === 0) {
+      setFilteredData("No data");
+      return;
+    }
+
+    setFilteredData(filtered);
   };
 
   const handleFilterChange = (city, mode) => {
     setSelectedCity(city);
     setSelectedMode(mode);
-    filter({ city: city, mode: mode }); // Filter data based on selected city and mode
+    filter({
+      city: selectedCity,
+      mode: selectedMode,
+    });
   };
 
   const handleCityChange = (event) => {
@@ -68,9 +90,30 @@ const SearchResults = () => {
     handleFilterChange(city, selectedMode);
   };
 
+  // const handleModeChange = (event) => {
+  //   const mode = event.target.value;
+  //   // console.log("value : " + mode);
+  //   handleFilterChange(selectedCity, mode);
+  // };
   const handleModeChange = (event) => {
     const mode = event.target.value;
-    handleFilterChange(selectedCity, mode);
+    const isChecked = event.target.checked;
+
+    let updatedModes;
+
+    if (isChecked) {
+      updatedModes = [...selectedMode, mode];
+    } else {
+      updatedModes = selectedMode.filter((m) => m !== mode);
+    }
+
+    setSelectedMode(updatedModes);
+    filter({
+      city: selectedCity,
+      mode: updatedModes,
+      delievryModes: selecteDelieveryModes,
+      durations: selectedDurations,
+    });
   };
 
   const handleDurationChange = (event) => {
@@ -87,6 +130,25 @@ const SearchResults = () => {
       city: selectedCity,
       mode: selectedMode,
       durations: updatedDurations,
+    });
+  };
+  const handleDelieveryMods = (event) => {
+    const delievryModes = event.target.value;
+    const isChecked = event.target.checked;
+    let updateddelievryModes = [...selecteDelieveryModes];
+    if (isChecked) {
+      updateddelievryModes.push(delievryModes);
+    } else {
+      updateddelievryModes = updateddelievryModes.filter(
+        (d) => d !== delievryModes
+      );
+    }
+    // console.log("delievery modes : " + updateddelievryModes);
+    setSelecteDelieveryModes(updateddelievryModes);
+    filter({
+      city: selectedCity,
+      mode: selectedMode,
+      delievryModes: updateddelievryModes,
     });
   };
 
@@ -173,23 +235,49 @@ const SearchResults = () => {
           <p>{course.description}</p>
         </div>
         <div className="col-lg-12 searchLinks primary">
-          <div className="row">
+          <div className="row searchrow">
             <div className="col-md-6 col-lg-2" title="Course Code">
               <p>{course.code}</p>
             </div>
-            <div className="col-md-6 col-lg-2" title="Faculty Name">
+            <div
+              className="col-md-6 col-lg-2"
+              title="Faculty Name"
+              style={{ whiteSpace: "nowrap" }}
+            >
               <p>{course.faculty.facultyCategory.name}</p>
             </div>
-            <div className="col-md-6 col-lg-2" title="Location">
+            <div
+              className="col-md-6 col-lg-2"
+              title="Location"
+              style={{ whiteSpace: "nowrap" }}
+            >
               {/* <p>{course.location}</p> */}
             </div>
-            <div className="col-md-6 col-lg-2" title="Mode">
-              <p>{course.deliveryMode}</p>
+            <div
+              className="col-md-6 col-lg-2"
+              title="Mode"
+              style={{ whiteSpace: "nowrap" }}
+            >
+              <div>
+                {course.deliveryMode.map((mode, index) => (
+                  <p key={index}>{mode}</p>
+                ))}
+              </div>
             </div>
-            <div className="col-md-6 col-lg-2" title="Types">
-              <p>{course.Types}</p>
+            <div
+              className="col-md-6 col-lg-2"
+              title="Types"
+              style={{ whiteSpace: "nowrap" }}
+            >
+              {course.type.map((mode, index) => (
+                <p key={index}>{mode}</p>
+              ))}
             </div>
-            <div className="col-md-6 col-lg-2" title="Duration">
+            <div
+              className="col-md-6 col-lg-2"
+              title="Duration"
+              style={{ whiteSpace: "nowrap" }}
+            >
               <p>{course.duration.name}</p>
             </div>
           </div>
@@ -219,9 +307,9 @@ const SearchResults = () => {
                   <h2 className="grid-title">
                     <i className="fas fa-filter"></i> Filters
                   </h2>
-                  <hr />
+                  {/* <hr /> */}
                   <div className="form-check">
-                    <div>
+                    {/* <div>
                       <h4>By Location:</h4>
                       <select
                         id="australian-cities"
@@ -234,16 +322,16 @@ const SearchResults = () => {
                         <option value="Brisbane">Brisbane</option>
                         <option value="Perth">Perth</option>
                       </select>
-                    </div>
+                    </div> */}
                     <hr />
-                    <div>
+                    {/* <div>
                       <h4>By Mode:</h4>
                       <div className="radio">
                         <label>
                           <input
                             type="radio"
-                            value="full-time"
-                            checked={selectedMode === "full-time"}
+                            value="FULL-TIME"
+                            checked={selectedMode.toUpperCase() === "FULL-TIME"}
                             onChange={handleModeChange}
                           />
                           Full Time Course
@@ -253,14 +341,40 @@ const SearchResults = () => {
                         <label>
                           <input
                             type="radio"
-                            value="part-time"
-                            checked={selectedMode === "part-time"}
+                            value="PART TIME"
+                            checked={selectedMode.toUpperCase() === "PART TIME"}
+                            onChange={handleModeChange}
+                          />
+                          Part Time Course
+                        </label>
+                      </div>
+                    </div> */}
+                    <div>
+                      <h4>By Mode:</h4>
+                      <div className="checkbox">
+                        <label>
+                          <input
+                            type="checkbox"
+                            value="FULL-TIME"
+                            checked={selectedMode.includes("FULL-TIME")}
+                            onChange={handleModeChange}
+                          />
+                          Full Time Course
+                        </label>
+                      </div>
+                      <div className="checkbox">
+                        <label>
+                          <input
+                            type="checkbox"
+                            value="PART TIME"
+                            checked={selectedMode.includes("PART TIME")}
                             onChange={handleModeChange}
                           />
                           Part Time Course
                         </label>
                       </div>
                     </div>
+
                     <hr />
                     <div>
                       <h4>By Duration:</h4>
@@ -280,7 +394,7 @@ const SearchResults = () => {
                           <input
                             type="checkbox"
                             className="icheck"
-                            value="1 Year"
+                            value="One Year"
                             onChange={handleDurationChange}
                           />{" "}
                           1 Year
@@ -291,10 +405,57 @@ const SearchResults = () => {
                           <input
                             type="checkbox"
                             className="icheck"
-                            value="2 Year"
+                            value="Two Years"
                             onChange={handleDurationChange}
                           />{" "}
                           2 Year
+                        </label>
+                      </div>
+                      <div className="checkbox">
+                        <label>
+                          <input
+                            type="checkbox"
+                            className="icheck"
+                            value="Four Years"
+                            onChange={handleDurationChange}
+                          />{" "}
+                          4 Year
+                        </label>
+                      </div>
+                    </div>
+                    <div>
+                      <h4>By Delivery Mode:</h4>
+                      <div className="checkbox">
+                        <label>
+                          <input
+                            type="checkbox"
+                            className="icheck"
+                            value="Online"
+                            onChange={handleDelieveryMods}
+                          />{" "}
+                          Online
+                        </label>
+                      </div>
+                      <div className="checkbox">
+                        <label>
+                          <input
+                            type="checkbox"
+                            className="icheck"
+                            value="In Class"
+                            onChange={handleDelieveryMods}
+                          />{" "}
+                          In-Class
+                        </label>
+                      </div>
+                      <div className="checkbox">
+                        <label>
+                          <input
+                            type="checkbox"
+                            className="icheck"
+                            value="Hybrid"
+                            onChange={handleDelieveryMods}
+                          />{" "}
+                          Hybrid
                         </label>
                       </div>
                     </div>
