@@ -1,8 +1,8 @@
 // for local
-const API_BASE_URL = "http://sstv5.cc:8080/api/apiV1";
+// const API_BASE_URL = "http://sstv5.cc:8080/api/apiV1";
 
 // for Live
-// const API_BASE_URL = "https://portal.abroadvarsity.com/api/apiV1";
+const API_BASE_URL = "https://portal.abroadvarsity.com/api/apiV1";
 
 const LANDING_PAGE_URL = API_BASE_URL + "/landingPageMaker";
 const SearchURL = API_BASE_URL + "/search?query=";
