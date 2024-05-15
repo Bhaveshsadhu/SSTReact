@@ -1,4 +1,3 @@
-// CacheContext.js
 import React, { createContext, useContext } from "react";
 
 const CacheContext = createContext();
@@ -7,8 +6,8 @@ export const useCache = () => useContext(CacheContext);
 
 export const CacheProvider = ({ children }) => {
   const CACHE_KEY = "cachedData";
-  // const CACHE_EXPIRATION_TIME = 30 * 60 * 1000; // 30 minutes in milliseconds
-  const CACHE_EXPIRATION_TIME = 5 * 1000; // 5 seconds in milliseconds
+  const CACHE_EXPIRATION_TIME = 30 * 60 * 1000; // 30 minutes in milliseconds
+  // const CACHE_EXPIRATION_TIME = 5 * 1000; // 5 seconds in milliseconds
 
   const setCachedData = (data) => {
     const cachedData = {
@@ -20,6 +19,7 @@ export const CacheProvider = ({ children }) => {
   };
 
   const getCachedData = () => {
+    // console.log("cached got called");
     const cachedDataString = localStorage.getItem(CACHE_KEY);
     if (cachedDataString) {
       const cachedData = JSON.parse(cachedDataString);

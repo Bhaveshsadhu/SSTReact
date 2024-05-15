@@ -13,11 +13,12 @@ function StudentRegister() {
     address: "1234 Street Name",
     city: "City",
     country_id: 2,
-    birth_date: "2000-01-01",
+    // birth_date: "2000-01-01",
+    birth_date: "",
     gender: "Male",
   });
 
-  const history = useHistory(); // Initialize useHistory
+  const history = useHistory();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -51,7 +52,7 @@ function StudentRegister() {
         body: { formData },
       });
 
-      console.log("response data : " + response);
+      console.log("response data : " + JSON.stringify(response));
 
       if (response.ok) {
         // Successful Registration

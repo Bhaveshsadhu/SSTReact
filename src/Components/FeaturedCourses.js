@@ -51,7 +51,7 @@ const FeaturedCourses = ({ cachedData }) => {
       setTotalPages(Math.ceil(cachedData.featuredCourses.length / cardsPerRow));
       setLoading(false);
       // Print message indicating data is from cache
-      // console.log("This is calling from FEATUREDCOURSES_Data : Cached Data");
+      console.log("This is calling from FEATUREDCOURSES_Data : Cached Data");
     } else {
       // Data is not cached, fetch it from API
       fetchDataFromAPI(LANDING_PAGE_URL, "GET")
@@ -63,7 +63,7 @@ const FeaturedCourses = ({ cachedData }) => {
             setTotalPages(Math.ceil(data.featuredCourses.length / cardsPerRow));
             setLoading(false);
             // Print message indicating data is from API
-            // console.log("This is calling from FEATUREDCOURSES_Data : API Data");
+            console.log("This is calling from FEATUREDCOURSES_Data : API Data");
           }
         })
         .catch((error) => {
@@ -119,8 +119,13 @@ const FeaturedCourses = ({ cachedData }) => {
   return (
     <div className="container mx-auto mt-5">
       <div className="row">
+        {/* <div class="d-md-flex justify-content-center align-items-center mb-4">
+          <h6 class="section-title  text-center  px-3 mt-3">
+            Featured Courses
+          </h6>
+        </div> */}
         <div className="col-md-6">
-          <h3 className="mb-4  text-primary">Featured Courses</h3>
+          <h3 className="mb-4 text-primary">Featured Courses</h3>
         </div>
         <div className="col-md-6 text-end">
           <button

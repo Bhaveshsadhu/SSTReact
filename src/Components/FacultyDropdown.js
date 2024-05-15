@@ -12,15 +12,17 @@ const FacultyDropdown = ({ cachedData }) => {
   const history = useHistory();
   const { CACHE_KEY, CACHE_EXPIRATION_TIME, setCachedData, getCachedData } =
     useCache();
-  const [cachedDT, setCachedDT] = useState("");
+  // const [cachedDT, setCachedDT] = useState("");
   const [cacheExpired, setCacheExpired] = useState(false);
 
   useEffect(() => {
     const fetchFaculties = async () => {
       try {
         setLoading(true);
+
+        cachedData = getCachedData();
         if (cachedData) {
-          // console.log("This is call for FacultyDropDown : Cached data");
+          console.log("This is call for FacultyDropDown : Cached data");
           setFaculties(
             cachedData.allFacultyCategories.map((faculty) => ({
               id: faculty.id,
@@ -30,7 +32,7 @@ const FacultyDropdown = ({ cachedData }) => {
           );
         } else {
           // console.log("calling API : ");
-          // console.log("This is call for FacultyDropDown : API CALL");
+          console.log("This is call for FacultyDropDown : API CALL");
           fetchData();
         }
         setLoading(false);
@@ -41,7 +43,7 @@ const FacultyDropdown = ({ cachedData }) => {
     };
 
     fetchFaculties();
-  }, []);
+  }, [cachedData]);
 
   const fetchData = () => {
     setLoading(true); // Set loading state to true
@@ -52,7 +54,7 @@ const FacultyDropdown = ({ cachedData }) => {
         setCachedData(data);
 
         // Update state with fetched data
-        setCachedDT(data);
+        // setCachedDT(data);
 
         // Extract and set faculties data
         setFaculties(

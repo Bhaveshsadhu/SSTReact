@@ -50,6 +50,7 @@ const MostAppliedFaculties = ({ cachedData }) => {
     setLoading(true);
 
     if (cachedData) {
+      console.log("This is call for MostappliedFaculties :Cached data");
       setAllCardsData(cachedData.popularFaculties);
       setTotalPages(
         Math.ceil(cachedData.popularFaculties.length / cardsPerRow)
@@ -60,6 +61,7 @@ const MostAppliedFaculties = ({ cachedData }) => {
         .then((data) => {
           if (data && Array.isArray(data.popularFaculties)) {
             cachedData = data;
+            console.log("This is call for MostappliedFaculties :API CALL");
             setAllCardsData(data.popularFaculties);
             setTotalPages(
               Math.ceil(data.popularFaculties.length / cardsPerRow)
