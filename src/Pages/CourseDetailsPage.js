@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useHistory, useParams } from "react-router-dom";
-// import { useParams } from "react-router-dom";
-// import { Link } from "react-router-dom";
 import { API_BASE_URL, DEBUG_MODE } from "../settings";
 import { fetchDataFromAPI } from "../Components/fetchDataFromAPI ";
 
@@ -67,7 +65,6 @@ const CourseDetailsPage = ({ isLoggedIn }) => {
               <h3 className="box-title mt-5">Key Highlights</h3>
               <ul className="list-unstyled">
                 <li>
-                  {/* <i className="fa fa-check text-success"></i>Sturdy structure */}
                   <strong>Delivery Modes:</strong>
                   <ul>
                     {cardData.deliveryMode.map((mode, index) => (

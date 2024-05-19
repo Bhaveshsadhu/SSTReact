@@ -1,15 +1,12 @@
 import React from "react";
 
 function ContactPage() {
-  // JavaScript for form validation
   const handleFormSubmit = (event) => {
     event.preventDefault();
     const form = event.target;
     if (form.checkValidity()) {
-      // Form is valid, handle form submission logic here
       console.log("Form submitted successfully");
     } else {
-      // Form is invalid, do nothing or show error messages
       console.log("Form submission failed");
     }
     form.classList.add("was-validated");
@@ -17,7 +14,6 @@ function ContactPage() {
 
   return (
     <>
-      <header>{/* Include your header component here */}</header>
       <section className="contact3 py-5">
         <div className="container">
           <div className="row">
@@ -171,7 +167,6 @@ function ContactPage() {
           </div>
         </div>
       </section>
-      <footer>{/* Include your footer component here */}</footer>
     </>
   );
 }

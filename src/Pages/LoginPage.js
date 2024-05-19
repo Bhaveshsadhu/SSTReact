@@ -41,21 +41,16 @@ function LoginPage({ onLogin }) {
       const response = await ApiCall(loginURL, "POST", {
         body: { email, password },
       });
-      // console.log("login Response : " + response);
+
       if (response) {
-        // Successful login
         console.log("Login successful!");
-        // console.log("Response data:", response);
-        // const data = await response.json();
+
         const tokenId = response.token;
         localStorage.setItem("token", tokenId);
-        // console.log("token:", tokenId);
-        // console.log("Token ID : " + tokenId);
-        // Store the email if "Remember Me" is checked
+
         if (rememberMe) {
           localStorage.setItem("rememberedEmail", email);
         } else {
-          // Clear stored email if "Remember Me" is unchecked
           localStorage.removeItem("rememberedEmail");
         }
 
@@ -177,7 +172,6 @@ function LoginPage({ onLogin }) {
           </div>
         </div>
       </section>
-      <footer>{/* Include your footer component here */}</footer>
     </>
   );
 }

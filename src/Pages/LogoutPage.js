@@ -10,12 +10,11 @@ function LogoutPage({ handleLogout, token }) {
     const logout = async () => {
       try {
         const response = await ApiCall(logoutURL, "POST");
-        // console.log("logOut Response : " + response);
+
         if (response) {
           // Logout successful
           console.log("Logout successful!");
-          // console.log("Response data:", response);
-          // console.log("token:", tokenId);
+
           localStorage.removeItem("token");
         } else {
           // Logout failed
@@ -34,8 +33,6 @@ function LogoutPage({ handleLogout, token }) {
 
     logout();
   }, [handleLogout, token, history]);
-
-  // Render nothing; redirect will happen immediately
 
   return null;
 }

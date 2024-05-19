@@ -15,17 +15,15 @@ export const CacheProvider = ({ children }) => {
       data: data,
     };
     localStorage.setItem(CACHE_KEY, JSON.stringify(cachedData));
-    // console.log("data stored in cached : " + JSON.stringify(cachedData));
   };
 
   const getCachedData = () => {
-    // console.log("cached got called");
     const cachedDataString = localStorage.getItem(CACHE_KEY);
     if (cachedDataString) {
       const cachedData = JSON.parse(cachedDataString);
       const currentTime = Date.now();
       const cacheExpirationTime = cachedData.timestamp + CACHE_EXPIRATION_TIME;
-      // console.log("Cached Experiation Time:" + cacheExpirationTime);
+
       if (currentTime < cacheExpirationTime) {
         return cachedData.data;
       } else {

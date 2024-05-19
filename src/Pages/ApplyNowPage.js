@@ -24,12 +24,10 @@ function ApplyNow() {
     const fetchData = async () => {
       try {
         const data = await ApiCall(StudentProfileURL);
-        // console.log("student data : " + data);
         const studentId = data.id;
         setStudentData(data);
       } catch (error) {
         console.error(error.message);
-        // Handle error appropriately, e.g., set error state
       }
     };
 
@@ -39,7 +37,6 @@ function ApplyNow() {
     const fetchSessions = async () => {
       try {
         const response = await ApiCall(SessionDropdownURL + cardData.id);
-        // console.log("response : " + response);
         setSessions(response);
       } catch (error) {
         console.error("Error fetching sessions:", error);
@@ -107,8 +104,6 @@ function ApplyNow() {
       const response = await ApiCall(createApplicationURL, "POST", {
         body: requestBody,
       });
-      // console.log("Form data:", JSON.stringify(requestBody));
-      // console.log("Response data:", JSON.stringify(response));
 
       if (response.success) {
         window.alert("Application submitted successfully!");
@@ -125,13 +120,7 @@ function ApplyNow() {
         <div className="card-body">
           <div className="row">
             <div className="col-lg-5 col-md-5 col-sm-6">
-              <div className="white-box text-center">
-                {/* <img
-                  src="https://www.bootdey.com/image/430x600/00CED1/000000"
-                  className="img-fluid"
-                  alt="Chair"
-                /> */}
-              </div>
+              <div className="white-box text-center"></div>
             </div>
 
             {/* student details */}

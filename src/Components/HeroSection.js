@@ -4,7 +4,7 @@ const HeroSection = () => {
   return (
     <section className="hero-section">
       <div className="container">
-        <h1>Welcome to SST App</h1>
+        <h1>Welcome to AbroadVarsity</h1>
         <p>Your ultimate destination for education</p>
       </div>
     </section>

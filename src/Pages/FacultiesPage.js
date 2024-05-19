@@ -4,9 +4,8 @@ import { fetchDataFromAPI } from "../Components/fetchDataFromAPI ";
 import { useParams } from "react-router-dom";
 
 import Card from "../Components/Card";
-// const cachedData = {};
+
 const FacultiesPage = ({ cachedData }) => {
-  // const title = "Most Popular Courses";
   const [cardsPerRow, setCardsPerRow] = useState(4);
   const [loading, setLoading] = useState(true);
   const { id } = useParams();
@@ -49,16 +48,10 @@ const FacultiesPage = ({ cachedData }) => {
       "GET"
     )
       .then((data) => {
-        // console.log("This is calling from MOST_POPULAR_COURSES : API Data");
         if (data && Array.isArray(data.data)) {
-          // Cache the fetched data
-          // cachedData[LANDING_PAGE_URL] = data;
-          // cachedData = data;
           setAllCardsData(data.data);
           setTotalPages(Math.ceil(data.data.length / cardsPerRow));
           setLoading(false);
-          // Print message indicating data is from API
-          // console.log("MOST_POPULAR_COURSES_Data is coming from API");
         }
       })
       .catch((error) => {
@@ -66,25 +59,9 @@ const FacultiesPage = ({ cachedData }) => {
         setLoading(false);
       });
   };
-  // const fetchData = () => {
-  //   // console.log("this is facultiesPage");
-  //   fetchDataFromAPI(API_BASE_URL + "/facultyCategory/" + id + "/courses")
-  //     .then((response) => {
-  //       if (response && Array.isArray(response.data)) {
-  //         setAllCardsData(response.data);
-  //         setTotalPages(Math.ceil(response.length / cardsPerPage));
-  //       } else {
-  //         console.error("Data is empty or not in expected format.");
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //     });
-  // };
 
   const renderCards = () => {
     if (loading) {
-      // return renderLoader();
     }
     if (!allCardsData) {
       return null;
@@ -175,9 +152,7 @@ const FacultiesPage = ({ cachedData }) => {
 
   return (
     <div className="container mx-auto mt-5">
-      <div className="col-md-6">
-        {/* <h3 className="mb-4  text-primary">Most Popular Courses</h3> */}
-      </div>
+      <div className="col-md-6"></div>
       <div className={`row g-4`}>{renderCards()}</div>
       <nav aria-label="Page navigation">
         <ul className="pagination justify-content-center mt-4">

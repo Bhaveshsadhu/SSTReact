@@ -6,13 +6,14 @@ import { fetchDataFromAPI } from "../Components/fetchDataFromAPI ";
 const SearchResults = () => {
   const { searchTerm } = useParams();
   const [filteredData, setFilteredData] = useState([]);
-  const [selectedCity, setSelectedCity] = useState("");
   const [originalData, setOriginalData] = useState([]);
-  const [selectedMode, setSelectedMode] = useState("");
+  // const [selectedCity, setSelectedCity] = useState("");
+  const [selectedMode, setSelectedMode] = useState([]);
   const [selectedDurations, setSelectedDurations] = useState([]);
-  const [selecteDelieveryModes, setSelecteDelieveryModes] = useState([]);
+  const [selectedDeliveryModes, setSelectedDeliveryModes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [noData, setNoData] = useState(false);
 
   useEffect(() => {
     filterData(SearchURL + searchTerm);
@@ -24,24 +25,31 @@ const SearchResults = () => {
       .then((data) => {
         if (data.data && Array.isArray(data.data)) {
           setOriginalData(data.data);
-          setFilteredData(data.data); // Set filtered data
+          setFilteredData(data.data);
+          setNoData(data.data.length === 0);
+          setLoading(false);
+        } else {
+          setOriginalData([]);
+          setFilteredData([]);
+          setNoData(true);
           setLoading(false);
         }
       })
       .catch((error) => {
         console.error("Error:", error);
         setLoading(false);
+        setNoData(true);
       });
   };
 
   const filter = (filters) => {
-    if (!filteredData || filteredData.length === 0) {
+    console.log("filters : " + JSON.stringify(filters));
+    if (!originalData || originalData.length === 0) {
       setFilteredData([]);
       return;
     }
 
-    let filtered = filteredData.filter((course) => {
-      // Check if course object exists and has deliveryMode property
+    let filtered = originalData.filter((course) => {
       if (!course || !Array.isArray(course.deliveryMode)) {
         return false;
       }
@@ -54,10 +62,10 @@ const SearchResults = () => {
         );
 
       const deliveryModeMatch =
-        !filters.delievryModes ||
-        filters.delievryModes.length === 0 ||
+        !filters.deliveryModes ||
+        filters.deliveryModes.length === 0 ||
         course.deliveryMode.some((mode) =>
-          filters.delievryModes.includes(mode)
+          filters.deliveryModes.includes(mode)
         );
 
       const durationMatch =
@@ -68,33 +76,24 @@ const SearchResults = () => {
       return modeMatch && deliveryModeMatch && durationMatch;
     });
 
-    if (filtered.length === 0) {
-      setFilteredData("No data");
-      return;
-    }
-
     setFilteredData(filtered);
+    setNoData(filtered.length === 0);
   };
-
-  const handleFilterChange = (city, mode) => {
-    setSelectedCity(city);
-    setSelectedMode(mode);
+  useEffect(() => {
     filter({
-      city: selectedCity,
       mode: selectedMode,
+      deliveryModes: selectedDeliveryModes,
+      durations: selectedDurations,
+    });
+  }, [selectedMode, selectedDeliveryModes, selectedDurations]);
+  const handleFilterChange = () => {
+    filter({
+      mode: selectedMode,
+      deliveryModes: selectedDeliveryModes,
+      durations: selectedDurations,
     });
   };
 
-  const handleCityChange = (event) => {
-    const city = event.target.value;
-    handleFilterChange(city, selectedMode);
-  };
-
-  // const handleModeChange = (event) => {
-  //   const mode = event.target.value;
-  //   // console.log("value : " + mode);
-  //   handleFilterChange(selectedCity, mode);
-  // };
   const handleModeChange = (event) => {
     const mode = event.target.value;
     const isChecked = event.target.checked;
@@ -106,14 +105,11 @@ const SearchResults = () => {
     } else {
       updatedModes = selectedMode.filter((m) => m !== mode);
     }
-
+    console.log("updatedModes value : " + updatedModes);
     setSelectedMode(updatedModes);
-    filter({
-      city: selectedCity,
-      mode: updatedModes,
-      delievryModes: selecteDelieveryModes,
-      durations: selectedDurations,
-    });
+    console.log("After updating state value : " + selectedMode);
+
+    handleFilterChange();
   };
 
   const handleDurationChange = (event) => {
@@ -126,30 +122,22 @@ const SearchResults = () => {
       updatedDurations = updatedDurations.filter((d) => d !== duration);
     }
     setSelectedDurations(updatedDurations);
-    filter({
-      city: selectedCity,
-      mode: selectedMode,
-      durations: updatedDurations,
-    });
+    handleFilterChange();
   };
-  const handleDelieveryMods = (event) => {
-    const delievryModes = event.target.value;
+
+  const handleDeliveryModesChange = (event) => {
+    const deliveryMode = event.target.value;
     const isChecked = event.target.checked;
-    let updateddelievryModes = [...selecteDelieveryModes];
+    let updatedDeliveryModes = [...selectedDeliveryModes];
     if (isChecked) {
-      updateddelievryModes.push(delievryModes);
+      updatedDeliveryModes.push(deliveryMode);
     } else {
-      updateddelievryModes = updateddelievryModes.filter(
-        (d) => d !== delievryModes
+      updatedDeliveryModes = updatedDeliveryModes.filter(
+        (d) => d !== deliveryMode
       );
     }
-    // console.log("delievery modes : " + updateddelievryModes);
-    setSelecteDelieveryModes(updateddelievryModes);
-    filter({
-      city: selectedCity,
-      mode: selectedMode,
-      delievryModes: updateddelievryModes,
-    });
+    setSelectedDeliveryModes(updatedDeliveryModes);
+    handleFilterChange();
   };
 
   const handlePageChange = (pageNumber) => {
@@ -248,13 +236,6 @@ const SearchResults = () => {
             </div>
             <div
               className="col-md-6 col-lg-2"
-              title="Location"
-              style={{ whiteSpace: "nowrap" }}
-            >
-              {/* <p>{course.location}</p> */}
-            </div>
-            <div
-              className="col-md-6 col-lg-2"
               title="Mode"
               style={{ whiteSpace: "nowrap" }}
             >
@@ -307,48 +288,8 @@ const SearchResults = () => {
                   <h2 className="grid-title">
                     <i className="fas fa-filter"></i> Filters
                   </h2>
-                  {/* <hr /> */}
+                  <hr />
                   <div className="form-check">
-                    {/* <div>
-                      <h4>By Location:</h4>
-                      <select
-                        id="australian-cities"
-                        value={selectedCity}
-                        onChange={handleCityChange}
-                      >
-                        <option value="">Select City</option>
-                        <option value="Sydney">Sydney</option>
-                        <option value="Melbourne">Melbourne</option>
-                        <option value="Brisbane">Brisbane</option>
-                        <option value="Perth">Perth</option>
-                      </select>
-                    </div> */}
-                    <hr />
-                    {/* <div>
-                      <h4>By Mode:</h4>
-                      <div className="radio">
-                        <label>
-                          <input
-                            type="radio"
-                            value="FULL-TIME"
-                            checked={selectedMode.toUpperCase() === "FULL-TIME"}
-                            onChange={handleModeChange}
-                          />
-                          Full Time Course
-                        </label>
-                      </div>
-                      <div className="radio">
-                        <label>
-                          <input
-                            type="radio"
-                            value="PART TIME"
-                            checked={selectedMode.toUpperCase() === "PART TIME"}
-                            onChange={handleModeChange}
-                          />
-                          Part Time Course
-                        </label>
-                      </div>
-                    </div> */}
                     <div>
                       <h4>By Mode:</h4>
                       <div className="checkbox">
@@ -431,7 +372,7 @@ const SearchResults = () => {
                             type="checkbox"
                             className="icheck"
                             value="Online"
-                            onChange={handleDelieveryMods}
+                            onChange={handleDeliveryModesChange}
                           />{" "}
                           Online
                         </label>
@@ -442,7 +383,7 @@ const SearchResults = () => {
                             type="checkbox"
                             className="icheck"
                             value="In Class"
-                            onChange={handleDelieveryMods}
+                            onChange={handleDeliveryModesChange}
                           />{" "}
                           In-Class
                         </label>
@@ -453,7 +394,7 @@ const SearchResults = () => {
                             type="checkbox"
                             className="icheck"
                             value="Hybrid"
-                            onChange={handleDelieveryMods}
+                            onChange={handleDeliveryModesChange}
                           />{" "}
                           Hybrid
                         </label>
@@ -463,7 +404,7 @@ const SearchResults = () => {
                 </div>
                 <div className="col-md-9">
                   <div className="container">
-                    {filteredData === "No data" ? (
+                    {noData ? (
                       <div className="no-data-message">No data</div>
                     ) : (
                       renderSearchItems()

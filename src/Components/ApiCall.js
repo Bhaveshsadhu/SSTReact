@@ -20,14 +20,8 @@ export const ApiCall = async (url, method = "GET", options = {}) => {
   };
 
   try {
-    // Make the API call
-    // console.log("url : " + url);
-    // console.log("body data : " + JSON.stringify(options.body));
-
     const response = await fetch(url, requestOptions);
 
-    // console.log("response : " + JSON.stringify(response));
-    // Log the status code of the response
     console.log("Response status code:", response.status);
 
     // Check for error status
@@ -39,7 +33,7 @@ export const ApiCall = async (url, method = "GET", options = {}) => {
 
     // Parse response data
     const data = await response.json();
-    // console.log("Response data:", data); // Log the data
+
     return data;
   } catch (error) {
     // Handle errors

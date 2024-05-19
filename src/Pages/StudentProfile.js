@@ -13,18 +13,15 @@ const StudentProfile = () => {
       try {
         const data = await ApiCall(StudentProfileURL);
         const studentId = data.id;
-        // console.log("Student Data : " + JSON.stringify(data));
         const applicationdata = await ApiCall(
           StudentApplicationsURL + "?id=" + studentId
         );
-        // console.log("Application Data : " + applicationdata);
+
         setStudentData(data);
 
         setApplication(applicationdata);
-        // sessionStorage.setItem("ApplicationData", applicationdata);
       } catch (error) {
         console.error(error.message);
-        // Handle error appropriately, e.g., set error state
       }
     };
 
@@ -122,13 +119,6 @@ const StudentProfile = () => {
                     <hr />
                     <div className="row">
                       <div className="col-sm-12">
-                        {/* <a
-                          className="btn btn-info "
-                          target=""
-                          href="StudentProfileEdit"
-                        >
-                          Edit
-                        </a> */}
                         <button
                           onClick={handleApplyNowClick}
                           className="btn btn-info"

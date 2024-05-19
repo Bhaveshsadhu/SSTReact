@@ -6,7 +6,7 @@ const GuestNavbar = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const history = useHistory();
 
-  const logoImg = "/assets/img/logo192.png";
+  const logoImg = "/assets/img/AV-full.png";
 
   const handleSearch = (event) => {
     event.preventDefault();
@@ -22,7 +22,7 @@ const GuestNavbar = () => {
       <nav className="navbar navbar-expand-lg usernavbar">
         <div className="container">
           <Link className="navbar-brand" to="/">
-            <img src={logoImg} alt="Logo" height="30" />
+            <img src={logoImg} alt="Logo" height="50" />
           </Link>
           <button
             className="navbar-toggler"
@@ -52,7 +52,7 @@ const GuestNavbar = () => {
                 >
                   Faculties
                 </a>
-                <FacultyDropdown cachedData={""} />
+                <FacultyDropdown />
               </li>
               <li className="nav-item ">
                 <Link className="nav-link text-white" to="/">

@@ -8,6 +8,10 @@ const MostPopularCourses = ({ cachedData }) => {
   const title = "Most Popular Courses";
   const [cardsPerRow, setCardsPerRow] = useState(4);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
+  const [allCardsData, setAllCardsData] = useState([]);
+  const Img = "assets/img/courses.jpg";
 
   useEffect(() => {
     handleResize();
@@ -15,6 +19,10 @@ const MostPopularCourses = ({ cachedData }) => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
+  }, []);
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const handleResize = () => {
@@ -30,39 +38,22 @@ const MostPopularCourses = ({ cachedData }) => {
     }
   };
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
-  const [allCardsData, setAllCardsData] = useState([]);
-  const Img = "assets/img/courses.jpg";
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const fetchData = () => {
     setLoading(true);
 
     if (cachedData) {
-      // Data is already cached, use it
       setAllCardsData(cachedData.popularCourses);
       setTotalPages(Math.ceil(cachedData.popularCourses.length / cardsPerRow));
       setLoading(false);
-      // Print message indicating data is from cache
-      // console.log("This is calling from MOST_POPULAR_COURSES : Cached Data");
     } else {
       // Data is not cached, fetch it from API
       fetchDataFromAPI(LANDING_PAGE_URL, "GET")
         .then((data) => {
-          // console.log("This is calling from MOST_POPULAR_COURSES : API Data");
           if (data && Array.isArray(data.popularCourses)) {
-            // Cache the fetched data
-            // cachedData[LANDING_PAGE_URL] = data;
             cachedData = data;
             setAllCardsData(data.popularCourses);
             setTotalPages(Math.ceil(data.popularCourses.length / cardsPerRow));
             setLoading(false);
-            // Print message indicating data is from API
-            // console.log("MOST_POPULAR_COURSES_Data is coming from API");
           }
         })
         .catch((error) => {
@@ -74,7 +65,13 @@ const MostPopularCourses = ({ cachedData }) => {
 
   const renderCards = () => {
     if (loading) {
-      // return renderLoader();
+      return (
+        <div className="loading-spinner-container">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      );
     }
     if (!allCardsData) {
       return null;
@@ -166,7 +163,7 @@ const MostPopularCourses = ({ cachedData }) => {
   return (
     <div className="container mx-auto mt-5">
       <div className="col-md-6">
-        <h3 className="mb-4  text-primary">Most Popular Courses</h3>
+        <h3 className="mb-4 text-primary">Most Popular Courses</h3>
       </div>
       <div className={`row g-4`}>{renderCards()}</div>
       <nav aria-label="Page navigation">

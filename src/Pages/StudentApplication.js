@@ -197,7 +197,6 @@ const StudentApplication = () => {
     setIsOpen(!isOpen);
   };
   const handleLoadMore = () => {
-    // Increase the display count by 10 when "Load More" is clicked
     setDisplayCount(displayCount + 10);
   };
 
@@ -217,8 +216,6 @@ const StudentApplication = () => {
         );
 
         const studentData = JSON.parse(sessionStorage.getItem("studentData"));
-        // const applicationDataFromProfile = sessionStorage.getItem("ApplicationData");
-        // console.log("Data From Session : ", JSON.stringify(applicationdata));
 
         setApplication(applicationdata);
       } catch (error) {
@@ -247,10 +244,8 @@ const StudentApplication = () => {
               onClick={toggleOffcanvas}
             >
               {isOpen ? (
-                // <i className="fas fa-angle-double-right"></i>
                 <i class="leftarrow fa-solid fa-circle-chevron-up "></i>
               ) : (
-                // <i className="fas fa-angle-double-left"></i>
                 <i class="rightarrow fa-solid fa-circle-chevron-up fa-lg"></i>
               )}
             </button>

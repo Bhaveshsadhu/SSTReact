@@ -29,13 +29,12 @@ import CourseDetailsPage from "./Pages/CourseDetailsPage";
 import FacultiesPage from "./Pages/FacultiesPage";
 import CourseRegistrationForm from "./Pages/CourseRegistrationForm";
 import LogoutPage from "./Pages/LogoutPage";
-import Demo from "./Pages/Demo";
 import NotFoundPage from "./Pages/NotFoundPage";
 import ApplyNowPage from "./Pages/ApplyNowPage";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const history = useHistory(); // Import and initialize useHistory
+  const history = useHistory();
 
   useEffect(() => {
     // Check if user is already logged in
@@ -47,13 +46,10 @@ function App() {
 
   const handleLogin = () => {
     setIsLoggedIn(true);
-    // history.push("/UserProfile");
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    // localStorage.removeItem("token");
-    // history.push("/");
   };
 
   const handleSearch = () => {
@@ -100,7 +96,7 @@ function App() {
 
           <Route path="/about" component={AboutPage} />
           <Route path="/contact" component={ContactPage} />
-          <Route path="/Demo" component={Demo} />
+
           <Route
             path="/courses/:id/"
             render={(props) => <CourseDetailsPage isLoggedIn={isLoggedIn} />}

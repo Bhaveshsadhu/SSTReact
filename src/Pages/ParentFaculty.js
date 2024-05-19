@@ -37,10 +37,7 @@ const ParentFaculty = () => {
             (item) => item.faculty_id === parseInt(facultyId)
           );
           setAllCardsData(filteredData);
-          // console.log(
-          //   "facult name : " +
-          //     filteredData[0].faculty.faculty_category.facultyName
-          // );
+
           facultyName = filteredData[0].faculty.faculty_category.facultyName;
           setTotalPages(Math.ceil(filteredData.length / cardsPerRow));
         } else {
@@ -54,34 +51,6 @@ const ParentFaculty = () => {
         setLoading(false);
       });
   };
-  // const fetchData = () => {
-  //   setLoading(true); // Set loading state to true
-
-  //   fetchData(allCourses)
-  //     .then((data) => {
-  //       if (data.data && Array.isArray(data.data)) {
-  //         const filteredData = data.data.filter(
-  //           (item) => item.faculty_id === parseInt(facultyId)
-  //         );
-  //         setAllCardsData(filteredData);
-  //         console.log(
-  //           "faculty name: " +
-  //             filteredData[0].faculty.faculty_category.facultyName
-  //         );
-  //         setFacultyName(filteredData[0].faculty.faculty_category.facultyName); // Assuming setFacultyName is a state updater function
-  //         setTotalPages(Math.ceil(filteredData.length / cardsPerRow));
-  //       } else {
-  //         setError(true);
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching data:", error);
-  //       setError(true);
-  //     })
-  //     .finally(() => {
-  //       setLoading(false); // Reset loading state
-  //     });
-  // };
 
   const handleResize = () => {
     const screenWidth = window.innerWidth;
@@ -191,15 +160,7 @@ const ParentFaculty = () => {
       <div className="col-md-6">
         <h3 className="mb-4 text-primary">{facultyName}</h3>
       </div>
-      {/* <div
-        className={`row g-4 ${
-          loading || error || allCardsData.length === 0
-            ? "justify-content-center align-items-center"
-            : ""
-        }`}
-      >
-        {renderCards()}
-      </div> */}
+
       <div
         className={`row g-4 ${
           loading || error || allCardsData.length === 0

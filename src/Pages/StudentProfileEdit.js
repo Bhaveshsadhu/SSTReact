@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { updateStudentURL } from "../settings";
 import { ApiCall } from "../Components/ApiCall";
-// import { useHistory } from "react-router-dom";
+
 function UserProfileEdit() {
   const location = useLocation();
   const { StudentData } = location.state;
@@ -15,16 +15,12 @@ function UserProfileEdit() {
     password: StudentData.newPassword,
   });
   const history = useHistory();
-  // useEffect(() => {
-  //   console.log("student data : " + JSON.stringify(StudentData));
-  // });
+
   const handleUpdateProfile = async () => {
     try {
-      // console.log("url : " + updateStudentURL + StudentData.id);
-      // console.log("from data : " + JSON.stringify(studentData));
       if (studentData.newPassword !== studentData.confirmPassword) {
         window.alert("New password and confirm password Must match.");
-        // You can display an error message to the user or handle it as needed
+
         return;
       }
       // return;
@@ -73,7 +69,6 @@ function UserProfileEdit() {
   };
 
   function displaySelectedImage(event, targetId) {
-    // Handle image display logic here if needed
     var selectedImage = document.getElementById(targetId);
     var file = event.target.files[0];
 
@@ -233,12 +228,6 @@ function UserProfileEdit() {
                 </div>
               </div>
             </div>{" "}
-            {/* Row END */}
-            {/* Social media detail */}
-            {/* ... (unchanged) */}
-            {/* change password */}
-            {/* ... (unchanged) */}
-            {/* Social media detail */}
             <div className="row mb-5 gx-5">
               <div className="col-xxl-6 mb-5 mb-xxl-0">
                 <div className="bg-secondary-soft px-4 py-5 rounded">

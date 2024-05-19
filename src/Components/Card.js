@@ -56,7 +56,6 @@ const Card = ({ card, Img }) => {
                 </div>
               </div>
 
-              {/* old desing */}
               <div className="card-section3 bg-primary-subtle text-primary border-1 rounded-4 text-center p-1 mb-2">
                 <div className="row">
                   <div className="col-md-4 ">
@@ -131,14 +130,7 @@ const Card = ({ card, Img }) => {
                       </ul>
                     </div>
                   </div>
-                  {/* <div className="col-md-4 ">
-                    <div className="mb-0">
-                      <strong>Duration</strong>
-                      <p className="mb-0 text-muted mb-2">
-                        {card.duration.name} ({card.duration.time} months)
-                      </p>
-                    </div>
-                  </div> */}
+
                   <div className="col-md-4 ">
                     <div className="delievery">
                       <a
@@ -179,10 +171,6 @@ const Card = ({ card, Img }) => {
                               className="text-muted"
                               style={{ marginRight: "10px" }}
                             >
-                              {/* {
-                                Math.floor(card.duration.time / 12);//year
-                                (card.duration.time % 12);//Remaining Months
-                              } */}
                               {mode.toUpperCase() === "IN-CLASS" && (
                                 <img
                                   src="/assets/img/training.png"
@@ -260,7 +248,6 @@ const Card = ({ card, Img }) => {
                   </div>
                 </div>
               </div>
-              {/* End old desing */}
             </div>
             <a
               href={`/courses/${card.id}`}

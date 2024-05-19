@@ -31,20 +31,6 @@ function StudentRegister() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // const headers = new Headers();
-    // headers.append("Content-Type", "application/json");
-    // headers.append(
-    //   "Public-Token",
-    //   "743c7a15a3850459adb8c1b9e3bfc744ed3efe26c9d3d808fdf30c9c2fd5c09d"
-    // );
-
-    // try {
-    //   const response = await fetch(StudentRegisterURL, {
-    //     method: "POST",
-    //     headers: headers,
-    //     credentials: "include",
-    //     body: JSON.stringify(formData), // Use formData here
-    //   });
     try {
       console.log("Form data : " + JSON.stringify(formData));
 
@@ -58,20 +44,14 @@ function StudentRegister() {
         // Successful Registration
         console.log("Registration successful!");
 
-        // const data = await response.json();
-        // const tokenId = data.token;
-        // localStorage.setItem("token", tokenId);
-
         history.push("/LoginPage"); // Redirect after successful registration
       } else {
         const data = await response.json();
         // Handle errors properly
         console.error("Registration failed:", data.message);
-        // setError(data.message || "Registration failed");
       }
     } catch (error) {
       console.error("Error during Registration:", error);
-      // setError("An error occurred during Registration");
     }
   };
 

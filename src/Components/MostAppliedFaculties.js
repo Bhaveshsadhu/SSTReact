@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
-  API_BASE_URL,
   MostAppliedFaculties_cardsPerPage,
   LANDING_PAGE_URL,
 } from "../settings";
 import { fetchDataFromAPI } from "./fetchDataFromAPI ";
+
 import Card from "./Card";
 
 const MostAppliedFaculties = ({ cachedData }) => {
@@ -90,7 +90,13 @@ const MostAppliedFaculties = ({ cachedData }) => {
 
   const renderCards = () => {
     if (loading) {
-      return null; // You can render a loading indicator here if needed
+      return (
+        <div className="loading-spinner-container">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      );
     }
     if (!allCardsData) {
       return null;
@@ -112,36 +118,29 @@ const MostAppliedFaculties = ({ cachedData }) => {
   return (
     <div className="container mx-auto mt-5 scrollable-container">
       <div className="row">
-        <div className="row">
-          <div className="col-4">
-            <button
-              className="btn btn-primary mb-3 me-1 justify-content-start"
-              type="button"
-              onClick={handlePrev}
-              disabled={activeIndex === 0} // Disable if activeIndex is 0
-            >
-              <i className="fa fa-arrow-left"></i>
-            </button>
-          </div>
-          <div className="col-4 d-flex justify-content-center">
-            <h3 className="mb-4 text-primary">Most Applied Faculties</h3>
-          </div>
-          <div className="col-4 d-flex justify-content-end">
-            <button
-              className="btn btn-primary mb-3"
-              type="button"
-              onClick={handleNext}
-              disabled={activeIndex >= allCardsData.length - cardsPerRow} // Disable if at last page
-            >
-              <i className="fa fa-arrow-right"></i>
-            </button>
-          </div>
+        <div className="col-4">
+          <button
+            className="btn btn-primary mb-3 me-1 justify-content-start"
+            type="button"
+            onClick={handlePrev}
+            disabled={activeIndex === 0} // Disable if activeIndex is 0
+          >
+            <i className="fa fa-arrow-left"></i>
+          </button>
         </div>
-
-        {/* <div className="col-md-6">
+        <div className="col-4 d-flex justify-content-center">
           <h3 className="mb-4 text-primary">Most Applied Faculties</h3>
-        </div> */}
-        <div className="col-md-6 d-flex justify-content-end align-items-center"></div>
+        </div>
+        <div className="col-4 d-flex justify-content-end">
+          <button
+            className="btn btn-primary mb-3"
+            type="button"
+            onClick={handleNext}
+            disabled={activeIndex >= allCardsData.length - cardsPerRow} // Disable if at last page
+          >
+            <i className="fa fa-arrow-right"></i>
+          </button>
+        </div>
       </div>
       <div className="row g-4" ref={containerRef}>
         {renderCards()}

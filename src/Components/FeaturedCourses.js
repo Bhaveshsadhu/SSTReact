@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from "react";
-import {
-  API_BASE_URL,
-  FeaturedCourses_cardsPerPage,
-  LANDING_PAGE_URL,
-} from "../settings";
+import { FeaturedCourses_cardsPerPage, LANDING_PAGE_URL } from "../settings";
 import { fetchDataFromAPI } from "./fetchDataFromAPI ";
+
 import Card from "./Card";
-// const cachedData = {};
+
 const FeaturedCourses = ({ cachedData }) => {
-  const title = "Most Popular Courses";
+  const title = "Featured Courses";
   const [cardsPerRow, setCardsPerRow] = useState(4);
   const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
+  const [allCardsData, setAllCardsData] = useState([]);
+  const Img = "assets/img/courses.jpg";
 
   useEffect(() => {
     handleResize();
@@ -19,6 +19,10 @@ const FeaturedCourses = ({ cachedData }) => {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
+  }, []);
+
+  useEffect(() => {
+    fetchData();
   }, []);
 
   const handleResize = () => {
@@ -34,14 +38,6 @@ const FeaturedCourses = ({ cachedData }) => {
     }
   };
 
-  const [totalPages, setTotalPages] = useState(0);
-  const [allCardsData, setAllCardsData] = useState([]);
-  const Img = "assets/img/courses.jpg";
-
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const fetchData = () => {
     setLoading(true);
 
@@ -51,7 +47,7 @@ const FeaturedCourses = ({ cachedData }) => {
       setTotalPages(Math.ceil(cachedData.featuredCourses.length / cardsPerRow));
       setLoading(false);
       // Print message indicating data is from cache
-      console.log("This is calling from FEATUREDCOURSES_Data : Cached Data");
+      console.log("This is calling from FEATUREDCOURSES_Data: Cached Data");
     } else {
       // Data is not cached, fetch it from API
       fetchDataFromAPI(LANDING_PAGE_URL, "GET")
@@ -63,7 +59,7 @@ const FeaturedCourses = ({ cachedData }) => {
             setTotalPages(Math.ceil(data.featuredCourses.length / cardsPerRow));
             setLoading(false);
             // Print message indicating data is from API
-            console.log("This is calling from FEATUREDCOURSES_Data : API Data");
+            console.log("This is calling from FEATUREDCOURSES_Data: API Data");
           }
         })
         .catch((error) => {
@@ -73,19 +69,15 @@ const FeaturedCourses = ({ cachedData }) => {
     }
   };
 
-  // const renderLoader = () => {
-  //   return (
-  //     <div className="d-flex justify-content-center mt-5">
-  //       <div className="spinner-border text-primary" role="status">
-  //         <span className="visually-hidden">Loading...</span>
-  //       </div>
-  //     </div>
-  //   );
-  // };
-
   const renderCards = () => {
     if (loading) {
-      // return renderLoader();
+      return (
+        <div className="loading-spinner-container">
+          <div className="spinner-border text-primary" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      );
     }
     if (!allCardsData) {
       return null;
@@ -106,24 +98,23 @@ const FeaturedCourses = ({ cachedData }) => {
 
   const handlePrev = () => {
     setActiveIndex((prevIndex) =>
-      prevIndex === 0 ? allCardsData.length - 3 : prevIndex - 3
+      prevIndex === 0
+        ? allCardsData.length - cardsPerRow
+        : prevIndex - cardsPerRow
     );
   };
 
   const handleNext = () => {
     setActiveIndex((prevIndex) =>
-      prevIndex >= allCardsData.length - 3 ? 0 : prevIndex + 3
+      prevIndex >= allCardsData.length - cardsPerRow
+        ? 0
+        : prevIndex + cardsPerRow
     );
   };
 
   return (
     <div className="container mx-auto mt-5">
       <div className="row">
-        {/* <div class="d-md-flex justify-content-center align-items-center mb-4">
-          <h6 class="section-title  text-center  px-3 mt-3">
-            Featured Courses
-          </h6>
-        </div> */}
         <div className="col-md-6">
           <h3 className="mb-4 text-primary">Featured Courses</h3>
         </div>
