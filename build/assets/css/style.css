@@ -43,6 +43,16 @@ body {
 .dropdown-profile {
   left: 4%;
 }
+/* hero section */
+.hero-section {
+  background-image: url("/assets/img/hero.jpg");
+  background-size: cover;
+  background-position: center;
+  color: #3633e2;
+  text-align: center;
+  padding: 100px 0;
+  height: 70vh;
+}
 
 .search {
   align-items: center;
@@ -293,6 +303,12 @@ body {
 }
 
 /* most popular courses cards */
+.loading-spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full viewport height to center vertically */
+}
 
 .pagination {
   font-size: 0.75 rem;
