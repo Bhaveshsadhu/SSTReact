@@ -43,6 +43,7 @@ const MostPopularCourses = ({ cachedData }) => {
 
     if (cachedData) {
       setAllCardsData(cachedData.popularCourses);
+
       setTotalPages(Math.ceil(cachedData.popularCourses.length / cardsPerRow));
       setLoading(false);
     } else {
@@ -52,6 +53,7 @@ const MostPopularCourses = ({ cachedData }) => {
           if (data && Array.isArray(data.popularCourses)) {
             cachedData = data;
             setAllCardsData(data.popularCourses);
+
             setTotalPages(Math.ceil(data.popularCourses.length / cardsPerRow));
             setLoading(false);
           }

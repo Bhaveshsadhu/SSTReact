@@ -1,7 +1,9 @@
 import React, { useState } from "react";
-import { Link, useHistory } from "react-router-dom"; // Import useHistory hook
+import { Link, useHistory } from "react-router-dom";
 import { StudentRegisterURL } from "../settings";
 import { ApiCall } from "../Components/ApiCall";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 function StudentRegister() {
   const [formData, setFormData] = useState({
@@ -9,13 +11,18 @@ function StudentRegister() {
     password: "",
     first_name: "",
     last_name: "",
-    phone: "1234567890",
-    address: "1234 Street Name",
-    city: "City",
+    phone: "",
+    address: "",
+    city: "",
     country_id: 2,
-    // birth_date: "2000-01-01",
     birth_date: "",
     gender: "Male",
+  });
+
+  const [modalInfo, setModalInfo] = useState({
+    show: false,
+    message: "",
+    isSuccess: false,
   });
 
   const history = useHistory();
@@ -30,36 +37,55 @@ function StudentRegister() {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    const form = event.target;
+    if (form.checkValidity()) {
+      try {
+        const data = await ApiCall(StudentRegisterURL, "POST", {
+          body: { formData },
+        });
 
-    try {
-      console.log("Form data : " + JSON.stringify(formData));
-
-      const response = await ApiCall(StudentRegisterURL, "POST", {
-        body: { formData },
-      });
-
-      console.log("response data : " + JSON.stringify(response));
-
-      if (response.ok) {
-        // Successful Registration
-        console.log("Registration successful!");
-
-        history.push("/LoginPage"); // Redirect after successful registration
-      } else {
-        const data = await response.json();
-        // Handle errors properly
-        console.error("Registration failed:", data.message);
+        console.log("Response : " + data);
+        if (data.isSuccess) {
+          setModalInfo({
+            show: true,
+            message: data.message,
+            isSuccess: true,
+          });
+          setTimeout(() => {
+            history.push("/login");
+          }, 3000);
+        } else {
+          setModalInfo({
+            show: true,
+            message: data.message,
+            isSuccess: false,
+          });
+        }
+      } catch (error) {
+        setModalInfo({
+          show: true,
+          message: "Error during registration. Please try again.",
+          isSuccess: false,
+        });
+        console.error("Error during Registration:", error);
       }
-    } catch (error) {
-      console.error("Error during Registration:", error);
+    } else {
+      console.log("Form submission failed");
     }
+    form.classList.add("was-validated");
   };
+
+  const handleClose = () => setModalInfo({ ...modalInfo, show: false });
 
   return (
     <div className="container p-5">
       <h1 className="mb-5 fw-bold fs-4">Register</h1>
       <div className="row">
-        <form className="col-md-6" onSubmit={handleSubmit}>
+        <form
+          className="col-md-6 needs-validation"
+          noValidate
+          onSubmit={handleSubmit}
+        >
           <div className="mb-4">
             <label className="form-label fw-semibold" htmlFor="first_name">
               First Name
@@ -74,6 +100,9 @@ function StudentRegister() {
               required
               autoFocus
             />
+            <div className="invalid-feedback">
+              Please provide a valid first name.
+            </div>
           </div>
 
           <div className="mb-4">
@@ -89,6 +118,9 @@ function StudentRegister() {
               onChange={handleChange}
               required
             />
+            <div className="invalid-feedback">
+              Please provide a valid last name.
+            </div>
           </div>
 
           <div className="mb-4">
@@ -104,6 +136,9 @@ function StudentRegister() {
               onChange={handleChange}
               required
             />
+            <div className="invalid-feedback">
+              Please provide a valid email address.
+            </div>
           </div>
 
           <div className="mb-4">
@@ -120,9 +155,99 @@ function StudentRegister() {
               required
               autoComplete="new-password"
             />
+            <div className="invalid-feedback">
+              Please provide a valid password.
+            </div>
           </div>
 
-          {/* Add other fields similarly */}
+          <div className="mb-4">
+            <label className="form-label fw-semibold" htmlFor="phone">
+              Phone
+            </label>
+            <input
+              className="form-control rounded-pill"
+              id="phone"
+              type="tel"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              required
+            />
+            <div className="invalid-feedback">
+              Please provide a valid phone number.
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label className="form-label fw-semibold" htmlFor="address">
+              Address
+            </label>
+            <input
+              className="form-control rounded-pill"
+              id="address"
+              type="text"
+              name="address"
+              value={formData.address}
+              onChange={handleChange}
+              required
+            />
+            <div className="invalid-feedback">
+              Please provide a valid address.
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label className="form-label fw-semibold" htmlFor="city">
+              City
+            </label>
+            <input
+              className="form-control rounded-pill"
+              id="city"
+              type="text"
+              name="city"
+              value={formData.city}
+              onChange={handleChange}
+              required
+            />
+            <div className="invalid-feedback">Please provide a valid city.</div>
+          </div>
+
+          <div className="mb-4">
+            <label className="form-label fw-semibold" htmlFor="birth_date">
+              Birth Date
+            </label>
+            <input
+              className="form-control rounded-pill"
+              id="birth_date"
+              type="date"
+              name="birth_date"
+              value={formData.birth_date}
+              onChange={handleChange}
+              required
+            />
+            <div className="invalid-feedback">
+              Please provide a valid birth date.
+            </div>
+          </div>
+
+          <div className="mb-4">
+            <label className="form-label fw-semibold" htmlFor="gender">
+              Gender
+            </label>
+            <select
+              className="form-control rounded-pill"
+              id="gender"
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              required
+            >
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+            <div className="invalid-feedback">Please select a gender.</div>
+          </div>
 
           <div className="d-flex align-items-center justify-content-between">
             <button
@@ -150,7 +275,7 @@ function StudentRegister() {
               </li>
               <li>
                 Users must not use offensive, vulgar, or otherwise inappropriate
-                language in their username or profile information
+                language in their username or profile information.
               </li>
               <li>
                 Users must not create multiple accounts for the same person.
@@ -159,6 +284,18 @@ function StudentRegister() {
           </div>
         </aside>
       </div>
+
+      <Modal show={modalInfo.show} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>{modalInfo.isSuccess ? "Success" : "Error"}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>{modalInfo.message}</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Close
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
